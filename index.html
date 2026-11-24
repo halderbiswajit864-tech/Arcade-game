@@ -1,0 +1,3053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Arcade Hub — 16-in-1 Cyberpunk Game Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #060913;
+            --bg-panel: rgba(13, 19, 34, 0.9);
+            --bg-card: rgba(18, 26, 46, 0.85);
+            --border-subtle: rgba(148, 163, 184, 0.16);
+            --cyan: #00f3ff;
+            --cyan-dim: rgba(0, 243, 255, 0.16);
+            --magenta: #ff007f;
+            --magenta-dim: rgba(255, 0, 127, 0.16);
+            --emerald: #06d6a0;
+            --emerald-dim: rgba(6, 214, 160, 0.16);
+            --amber: #ffbe0b;
+            --purple: #9d4edd;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-void);
+            background-image:
+                radial-gradient(circle at 12% 10%, rgba(0, 243, 255, 0.11) 0%, transparent 38%),
+                radial-gradient(circle at 88% 85%, rgba(255, 0, 127, 0.11) 0%, transparent 40%),
+                linear-gradient(180deg, #060913 0%, #090e1c 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        .font-cyber {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.04em;
+        }
+
+        /* Top Navigation Bar */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 60;
+            background: rgba(6, 9, 18, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.7rem 1rem;
+        }
+
+        .topbar-inner {
+            max-width: 1140px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .brand-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 18px rgba(0, 243, 255, 0.35);
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-size: 1.08rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #00f3ff, #c084fc, #ff007f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .brand-sub {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .top-action-btn {
+            padding: 0.45rem 0.85rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(30, 41, 59, 0.8);
+            color: var(--text-main);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .top-action-btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .top-action-btn.primary {
+            background: linear-gradient(135deg, var(--cyan), #0284c7);
+            color: #03111a;
+            border: none;
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-subtle);
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .icon-btn:hover {
+            background: rgba(51, 65, 85, 0.9);
+            border-color: rgba(0, 243, 255, 0.45);
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            width: 100%;
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 1.35rem 1rem 2.5rem;
+        }
+
+        /* Lobby View */
+        .hub-hero {
+            text-align: center;
+            max-width: 660px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .hub-badge {
+            display: inline-block;
+            padding: 0.3rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            background: var(--cyan-dim);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 243, 255, 0.32);
+            margin-bottom: 0.65rem;
+        }
+
+        .hub-hero h2 {
+            font-size: clamp(1.6rem, 4vw, 2.25rem);
+            font-weight: 900;
+            margin-bottom: 0.45rem;
+            color: #fff;
+        }
+
+        .hub-hero p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .filter-tab {
+            padding: 0.52rem 0.95rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tab:hover {
+            color: #fff;
+            border-color: rgba(0, 243, 255, 0.4);
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.2), rgba(157, 78, 221, 0.2));
+            color: var(--cyan);
+            border-color: var(--cyan);
+            box-shadow: 0 0 16px rgba(0, 243, 255, 0.22);
+        }
+
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.1rem;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 1.35rem;
+            cursor: pointer;
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.22s, box-shadow 0.22s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-accent, var(--cyan));
+            box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.75), 0 0 18px rgba(0, 243, 255, 0.14);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.9rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--border-subtle);
+            color: var(--card-accent, var(--cyan));
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.3rem;
+        }
+
+        .stat-chip {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.24rem 0.58rem;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--border-subtle);
+            color: var(--card-accent, var(--cyan));
+        }
+
+        .mode-chip {
+            font-size: 0.64rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .game-card h3 {
+            font-size: 1.12rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            color: #fff;
+        }
+
+        .game-card p {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 1.1rem;
+        }
+
+        .card-cta {
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--card-accent, var(--cyan));
+        }
+
+        /* Active Stage Shell */
+        .stage-shell {
+            max-width: 680px;
+            margin: 0 auto;
+            background: var(--bg-panel);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 1.35rem;
+            box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.8);
+            animation: stageFade 0.25s ease;
+        }
+
+        @keyframes stageFade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stage-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.95rem;
+        }
+
+        .stage-title {
+            font-size: 1.28rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .stage-sub {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .segmented-bar {
+            display: flex;
+            flex-wrap: wrap;
+            background: rgba(6, 9, 18, 0.88);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 0.95rem;
+        }
+
+        .seg-btn {
+            flex: 1;
+            min-width: 96px;
+            padding: 0.48rem 0.5rem;
+            border: none;
+            border-radius: 9px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .seg-btn:hover { color: #fff; }
+
+        .seg-btn.active {
+            background: var(--cyan);
+            color: #041019;
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.35);
+        }
+
+        .live-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.55rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .live-box {
+            background: rgba(6, 9, 18, 0.82);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .live-box.p1 { border-color: rgba(0, 243, 255, 0.35); }
+        .live-box.p2 { border-color: rgba(255, 0, 127, 0.35); }
+
+        .live-lbl {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .live-box.p1 .live-lbl { color: var(--cyan); }
+        .live-box.p2 .live-lbl { color: var(--magenta); }
+
+        .live-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+            margin-top: 0.1rem;
+        }
+
+        .status-banner {
+            text-align: center;
+            padding: 0.58rem 0.9rem;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        .stage-canvas-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: #04070f;
+            border: 2px solid rgba(0, 243, 255, 0.35);
+            border-radius: 16px;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .stage-canvas-wrap.square {
+            aspect-ratio: 1 / 1;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .stage-canvas-wrap canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .canvas-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(4, 7, 15, 0.84);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            z-index: 5;
+        }
+
+        .canvas-overlay.hidden { display: none; }
+
+        .btn-primary {
+            padding: 0.72rem 1.15rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--cyan), #0284c7);
+            color: #03111a;
+            font-weight: 800;
+            font-size: 0.84rem;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .btn-primary:hover { transform: translateY(-1px); }
+
+        .btn-secondary {
+            padding: 0.72rem 1rem;
+            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover { color: #fff; }
+
+        .error-box {
+            background: rgba(127, 29, 29, 0.35);
+            border: 1px solid #f87171;
+            border-radius: 14px;
+            padding: 1rem;
+            text-align: center;
+            color: #fecaca;
+            margin-top: 0.75rem;
+        }
+
+        /* Board & Game Controls */
+        .ttt-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 310px;
+            margin: 0 auto;
+        }
+
+        .ttt-cell {
+            aspect-ratio: 1 / 1;
+            background: rgba(9, 14, 28, 0.95);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .ttt-cell.x { color: var(--cyan); text-shadow: 0 0 14px rgba(0, 243, 255, 0.65); }
+        .ttt-cell.o { color: var(--magenta); text-shadow: 0 0 14px rgba(255, 0, 127, 0.65); }
+        .ttt-cell.win { background: rgba(6, 214, 160, 0.18); border-color: var(--emerald); }
+
+        .c4-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            max-width: 420px;
+            margin: 0 auto;
+            background: #070d1c;
+            padding: 10px;
+            border-radius: 16px;
+            border: 2px solid rgba(0, 243, 255, 0.25);
+        }
+
+        .c4-cell {
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            background: #03060c;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            cursor: pointer;
+        }
+
+        .c4-cell.p1 { background: radial-gradient(circle at 32% 32%, #7af8ff, #00c8d6); box-shadow: 0 0 10px rgba(0, 243, 255, 0.6); }
+        .c4-cell.p2 { background: radial-gradient(circle at 32% 32%, #ff85b8, #ff007f); box-shadow: 0 0 10px rgba(255, 0, 127, 0.6); }
+
+        .dab-svg {
+            width: 100%;
+            max-width: 330px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mem-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 9px;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .mem-card {
+            aspect-ratio: 1 / 1;
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(157, 78, 221, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--purple);
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, background 0.2s;
+        }
+
+        .mem-card.revealed {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: var(--cyan);
+            color: #fff;
+        }
+
+        .mem-card.matched {
+            background: rgba(6, 214, 160, 0.16);
+            border-color: var(--emerald);
+            color: #fff;
+        }
+
+        .nim-arena {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            padding: 0.9rem;
+            background: rgba(6, 9, 19, 0.88);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .nim-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.55rem;
+        }
+
+        .nim-stick {
+            width: 22px;
+            height: 40px;
+            border-radius: 7px;
+            background: linear-gradient(180deg, #00f3ff, #0284c7);
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .nim-stick.sel {
+            background: linear-gradient(180deg, #ffbe0b, #d97706);
+            transform: translateY(-5px);
+        }
+
+        .nim-stick.gone {
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .board-8x8 {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 3px;
+            max-width: 380px;
+            margin: 0 auto;
+            background: #061018;
+            padding: 6px;
+            border-radius: 14px;
+            border: 2px solid rgba(6, 214, 160, 0.35);
+        }
+
+        .sq-8x8 {
+            aspect-ratio: 1 / 1;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .mancala-wrap {
+            display: grid;
+            grid-template-columns: 58px 1fr 58px;
+            gap: 8px;
+            background: rgba(6, 9, 19, 0.92);
+            border: 2px solid rgba(255, 190, 11, 0.35);
+            border-radius: 18px;
+            padding: 10px;
+            align-items: center;
+        }
+
+        .man-store {
+            height: 112px;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+        }
+
+        .man-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            margin: 6px 0;
+        }
+
+        .man-pit {
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            background: rgba(18, 26, 46, 0.95);
+            border: 2px solid rgba(148, 163, 184, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .bs-wrap {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.9rem;
+        }
+
+        @media (min-width: 580px) {
+            .bs-wrap { grid-template-columns: 1fr 1fr; }
+        }
+
+        .bs-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 3px;
+            background: rgba(6, 9, 19, 0.92);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .bs-cell {
+            aspect-ratio: 1 / 1;
+            border-radius: 4px;
+            background: rgba(15, 23, 42, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .tank-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 0.65rem;
+            align-items: center;
+            background: rgba(6, 9, 19, 0.88);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 0.7rem;
+            margin-top: 0.75rem;
+        }
+
+        .tank-bar label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .tank-bar input { width: 100%; accent-color: var(--cyan); }
+
+        .pad-row {
+            display: grid;
+            grid-template-columns: repeat(3, 52px);
+            gap: 6px;
+            justify-content: center;
+            margin-top: 0.75rem;
+        }
+
+        .pad-btn {
+            height: 46px;
+            border-radius: 11px;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .pad-btn:active { background: var(--cyan); color: #041019; }
+
+        .dual-pad {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .tug-box {
+            background: rgba(6, 9, 19, 0.92);
+            border: 2px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.15rem 0.9rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .tug-track {
+            position: relative;
+            height: 32px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(0, 243, 255, 0.25), rgba(15, 23, 42, 0.95) 50%, rgba(255, 0, 127, 0.25));
+            border: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .tug-mid {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.45);
+        }
+
+        .tug-orb {
+            position: absolute;
+            top: 50%;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff, var(--amber));
+            box-shadow: 0 0 18px var(--amber);
+            transform: translate(-50%, -50%);
+            transition: left 0.07s ease-out;
+        }
+
+        .tug-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .tug-btn {
+            height: 96px;
+            border-radius: 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: 2px solid;
+        }
+
+        .tug-btn.p1 { background: rgba(0, 243, 255, 0.14); border-color: var(--cyan); color: var(--cyan); }
+        .tug-btn.p2 { background: rgba(255, 0, 127, 0.14); border-color: var(--magenta); color: var(--magenta); }
+
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+        <div class="topbar-inner">
+            <button class="brand-btn" id="brand-lobby-btn" type="button">
+                <div class="brand-logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#040812" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title font-cyber">NEON ARCADE</div>
+                    <div class="brand-sub">16-in-1 Cyber Suite</div>
+                </div>
+            </button>
+
+            <div class="topbar-actions">
+                <button class="top-action-btn" id="top-lobby-btn" type="button">Lobby</button>
+                <button class="top-action-btn primary" id="top-restart-btn" type="button" style="display:none;">Restart</button>
+                <button class="icon-btn" id="mute-btn" type="button" title="Toggle Synth Audio">
+                    <span id="mute-label" style="font-family:'Orbitron',sans-serif;font-size:0.7rem;font-weight:800;">SFX</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Lobby View -->
+        <section id="lobby-view">
+            <div class="hub-hero">
+                <span class="hub-badge">16-Game Cyberpunk Arcade</span>
+                <h2 class="font-cyber">Select Your Game</h2>
+                <p>Play against smart CPU opponents or challenge a friend in 2-Player mode. Every card launches immediately with full state isolation.</p>
+            </div>
+
+            <div class="filter-tabs" id="filter-tabs">
+                <button class="filter-tab active" type="button" data-cat="all">All Games (16)</button>
+                <button class="filter-tab" type="button" data-cat="multi">vs CPU &amp; 2P (14)</button>
+                <button class="filter-tab" type="button" data-cat="action">Action &amp; Arcade</button>
+                <button class="filter-tab" type="button" data-cat="strategy">Strategy &amp; Board</button>
+                <button class="filter-tab" type="button" data-cat="solo">Solo</button>
+            </div>
+
+            <div class="hub-grid" id="hub-grid"></div>
+        </section>
+
+        <!-- Active Game Stage View -->
+        <section id="stage-view" style="display:none;">
+            <div class="stage-shell" id="stage-shell"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        NEON ARCADE HUB • 16-Game Self-Contained HTML5 &amp; Web Audio Engine
+    </footer>
+
+    <script>
+        /* ======================================================================
+           1. SAFE WEB AUDIO SYNTHESIZER (AUTOPLAY-SAFE)
+           ====================================================================== */
+        const AudioEngine = (() => {
+            let ctx = null;
+            let muted = false;
+
+            function ensureCtx() {
+                if (muted) return null;
+                try {
+                    if (!ctx) {
+                        const AC = window.AudioContext || window.webkitAudioContext;
+                        if (AC) ctx = new AC();
+                    }
+                    if (ctx && ctx.state === 'suspended') {
+                        ctx.resume().catch(() => {});
+                    }
+                    return ctx;
+                } catch (_) {
+                    return null;
+                }
+            }
+
+            function tone(freq, duration = 0.08, type = 'sine', gainVal = 0.07) {
+                const ac = ensureCtx();
+                if (!ac) return;
+                try {
+                    const osc = ac.createOscillator();
+                    const g = ac.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, ac.currentTime);
+                    g.gain.setValueAtTime(gainVal, ac.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + duration);
+                    osc.connect(g);
+                    g.connect(ac.destination);
+                    osc.start();
+                    osc.stop(ac.currentTime + duration);
+                } catch (_) {}
+            }
+
+            return {
+                click: () => tone(520, 0.05, 'triangle', 0.05),
+                move: (p1 = true) => tone(p1 ? 640 : 420, 0.08, 'sine', 0.07),
+                score: () => { tone(660, 0.08, 'triangle', 0.08); setTimeout(() => tone(880, 0.12, 'triangle', 0.08), 75); },
+                win: () => [523, 659, 784, 1046].forEach((n, i) => setTimeout(() => tone(n, 0.14, 'triangle', 0.08), i * 85)),
+                lose: () => [320, 240, 170].forEach((n, i) => setTimeout(() => tone(n, 0.15, 'sawtooth', 0.06), i * 105)),
+                toggleMute: () => {
+                    muted = !muted;
+                    return muted;
+                },
+                isMuted: () => muted
+            };
+        })();
+
+        /* ======================================================================
+           2. GAME CATALOG & PERSISTENT STATS
+           ====================================================================== */
+        const GAMES = [
+            { id: 'ttt', title: 'Tic-Tac-Toe', desc: '3×3 tactical grid with 1P Hard Minimax AI, 1P Easy AI, and 2-Player mode.', cats: ['multi', 'strategy'], modes: '1P AI • 2P', accent: '#00f3ff', badge: '#' },
+            { id: 'c4', title: 'Neon Drop (Connect 4)', desc: '7×6 vertical disc drop with tactical CPU threat-blocking and 2-Player mode.', cats: ['multi', 'strategy'], modes: '1P CPU • 2P', accent: '#ff007f', badge: 'C4' },
+            { id: 'dab', title: 'Cyber Grid (Dots & Boxes)', desc: 'Claim grid lines to complete boxes and earn bonus turns vs CPU or a friend.', cats: ['multi', 'strategy'], modes: '1P CPU • 2P', accent: '#38bdf8', badge: '⊞' },
+            { id: 'pong', title: 'Cyber Pong', desc: 'Fast neon paddle arena with 1P CPU and simultaneous 2-Player controls.', cats: ['multi', 'action'], modes: '1P CPU • 2P', accent: '#ffbe0b', badge: '⚡' },
+            { id: 'snake', title: 'Neon Snake', desc: 'Grow your plasma serpent across Chill, Normal, and Turbo speeds.', cats: ['solo', 'action'], modes: 'Solo', accent: '#06d6a0', badge: '◈' },
+            { id: 'memory', title: 'Cyber Memory Match', desc: 'Match glowing cyber pairs in 1P Solo or 2-Player turn-stealing duels.', cats: ['multi', 'strategy'], modes: '1P Solo • 2P', accent: '#9d4edd', badge: '❖' },
+            { id: 'nim', title: 'Neon Nim', desc: 'Strategic pile-removal duel across 1-3-5-7 rows vs Optimal XOR AI or 2P.', cats: ['multi', 'strategy'], modes: '1P AI • 2P', accent: '#00f3ff', badge: '|||' },
+            { id: 'reversi', title: 'Cyber Reversi', desc: '8×8 disc-flipping strategy with positional corner AI and 2-Player mode.', cats: ['multi', 'strategy'], modes: '1P CPU • 2P', accent: '#06d6a0', badge: '◐' },
+            { id: 'mancala', title: 'Neon Mancala', desc: 'Sow seeds counter-clockwise for bonus store turns and opposite captures.', cats: ['multi', 'strategy'], modes: '1P CPU • 2P', accent: '#ffbe0b', badge: '⬭' },
+            { id: 'checkers', title: 'Cyber Checkers', desc: '8×8 diagonal draughts with jump captures, King crowns, and 1P/2P play.', cats: ['multi', 'strategy'], modes: '1P CPU • 2P', accent: '#9d4edd', badge: '◎' },
+            { id: 'battleship', title: 'Neon Battleship', desc: '8×8 naval sonar duel against Hunt AI or 2P pass-and-play privacy screen.', cats: ['multi', 'strategy'], modes: '1P CPU • 2P', accent: '#00f3ff', badge: '⌖' },
+            { id: 'tanks', title: 'Cyber Tanks', desc: 'Destructible terrain artillery battle—tune angle, power, and wind.', cats: ['multi', 'action', 'strategy'], modes: '1P CPU • 2P', accent: '#ff007f', badge: '▲' },
+            { id: 'sumo', title: 'Neon Sumo', desc: '2D physics ring push battle with dash boosts in 1P CPU or 2P mode.', cats: ['multi', 'action'], modes: '1P CPU • 2P', accent: '#ffbe0b', badge: '◉' },
+            { id: 'tron', title: 'Cyber Tron', desc: 'Light-cycle trail duel—trap your rival without hitting walls or beams.', cats: ['multi', 'action'], modes: '1P CPU • 2P', accent: '#00f3ff', badge: '⑂' },
+            { id: 'tug', title: 'Neon Tug-of-War', desc: 'Rapid tap/key battle to pull the plasma spark across the threshold.', cats: ['multi', 'action'], modes: '1P CPU • 2P', accent: '#ff007f', badge: '⇄' },
+            { id: 'breakout', title: 'Cyber Breakout', desc: 'Smash neon bricks and catch Wide, Multi-Ball, and Laser power-ups.', cats: ['solo', 'action'], modes: 'Solo', accent: '#06d6a0', badge: '▤' }
+        ];
+
+        const DEFAULT_STATS = {
+            ttt: { p1: 0, p2: 0, d: 0 },
+            c4: { p1: 0, p2: 0, d: 0 },
+            dab: { p1: 0, p2: 0 },
+            pong: { p1: 0, p2: 0 },
+            snake: { best: 0 },
+            memory: { best: null },
+            nim: { p1: 0, p2: 0 },
+            reversi: { p1: 0, p2: 0 },
+            mancala: { p1: 0, p2: 0 },
+            checkers: { p1: 0, p2: 0 },
+            battleship: { p1: 0, p2: 0 },
+            tanks: { p1: 0, p2: 0 },
+            sumo: { p1: 0, p2: 0 },
+            tron: { p1: 0, p2: 0 },
+            tug: { p1: 0, p2: 0 },
+            breakout: { best: 0 }
+        };
+
+        let stats = JSON.parse(JSON.stringify(DEFAULT_STATS));
+        try {
+            const raw = localStorage.getItem('neonArcadeReliableV1');
+            if (raw) stats = { ...JSON.parse(JSON.stringify(DEFAULT_STATS)), ...JSON.parse(raw) };
+        } catch (_) {}
+
+        function persistStats() {
+            try { localStorage.setItem('neonArcadeReliableV1', JSON.stringify(stats)); } catch (_) {}
+        }
+
+        function formatStatBadge(id) {
+            const s = stats[id] || {};
+            if (id === 'snake' || id === 'breakout') return `Best: ${s.best || 0}`;
+            if (id === 'memory') return s.best ? `Best: ${s.best}m` : 'Best: --';
+            return `Wins: ${s.p1 || 0}`;
+        }
+
+        /* ======================================================================
+           3. LIFECYCLE MANAGER (TIMERS, RAF, KEYS, CLEANUP, STAGE ROUTER)
+           ====================================================================== */
+        let currentGameId = null;
+        let currentFilter = 'all';
+        let activeIntervals = new Set();
+        let activeRafs = new Set();
+        let activeTimeouts = new Set();
+        const keys = {};
+
+        function registerInterval(id) { activeIntervals.add(id); return id; }
+        function registerRaf(id) { activeRafs.add(id); return id; }
+        function registerTimeout(id) { activeTimeouts.add(id); return id; }
+
+        function clearAllLoops() {
+            activeIntervals.forEach(id => clearInterval(id));
+            activeIntervals.clear();
+            activeRafs.forEach(id => cancelAnimationFrame(id));
+            activeRafs.clear();
+            activeTimeouts.forEach(id => clearTimeout(id));
+            activeTimeouts.clear();
+        }
+
+        function fitCanvas(canvas, fallbackW = 640, fallbackH = 400) {
+            if (!canvas) return { w: fallbackW, h: fallbackH };
+            const parent = canvas.parentElement;
+            const cw = parent && parent.clientWidth > 40 ? parent.clientWidth : fallbackW;
+            const ch = parent && parent.clientHeight > 40 ? parent.clientHeight : fallbackH;
+            canvas.width = Math.round(cw);
+            canvas.height = Math.round(ch);
+            return { w: canvas.width, h: canvas.height };
+        }
+
+        function buildLobbyCards() {
+            const grid = document.getElementById('hub-grid');
+            grid.innerHTML = '';
+            const list = GAMES.filter(g => currentFilter === 'all' || g.cats.includes(currentFilter));
+
+            list.forEach(g => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.dataset.gameId = g.id;
+                card.style.setProperty('--card-accent', g.accent);
+
+                const top = document.createElement('div');
+                top.className = 'card-top';
+
+                const icon = document.createElement('div');
+                icon.className = 'card-icon';
+                icon.textContent = g.badge;
+
+                const tags = document.createElement('div');
+                tags.className = 'card-tags';
+
+                const chip = document.createElement('span');
+                chip.className = 'stat-chip';
+                chip.textContent = formatStatBadge(g.id);
+
+                const mode = document.createElement('span');
+                mode.className = 'mode-chip';
+                mode.textContent = g.modes;
+
+                tags.appendChild(chip);
+                tags.appendChild(mode);
+                top.appendChild(icon);
+                top.appendChild(tags);
+
+                const h3 = document.createElement('h3');
+                h3.textContent = g.title;
+
+                const p = document.createElement('p');
+                p.textContent = g.desc;
+
+                const cta = document.createElement('div');
+                cta.className = 'card-cta';
+                cta.textContent = 'Open Game →';
+
+                card.appendChild(top);
+                card.appendChild(h3);
+                card.appendChild(p);
+                card.appendChild(cta);
+                grid.appendChild(card);
+            });
+        }
+
+        function openLobby() {
+            AudioEngine.click();
+            clearAllLoops();
+            currentGameId = null;
+            document.getElementById('top-restart-btn').style.display = 'none';
+            document.getElementById('stage-view').style.display = 'none';
+            document.getElementById('lobby-view').style.display = 'block';
+            buildLobbyCards();
+        }
+
+        function openGame(gameId) {
+            clearAllLoops();
+            const gameMeta = GAMES.find(g => g.id === gameId);
+            if (!gameMeta) return;
+
+            currentGameId = gameId;
+            document.getElementById('lobby-view').style.display = 'none';
+            document.getElementById('stage-view').style.display = 'block';
+            document.getElementById('top-restart-btn').style.display = 'inline-block';
+
+            const shell = document.getElementById('stage-shell');
+            shell.innerHTML = '';
+
+            const header = document.createElement('div');
+            header.className = 'stage-header';
+            header.innerHTML = `
+                <div>
+                    <h2 class="stage-title font-cyber" style="color:${gameMeta.accent}">${gameMeta.title}</h2>
+                    <div class="stage-sub">${gameMeta.modes}</div>
+                </div>
+                <button class="btn-secondary" id="stage-back-btn" type="button">← Lobby</button>
+            `;
+            shell.appendChild(header);
+            document.getElementById('stage-back-btn').addEventListener('click', openLobby);
+
+            const body = document.createElement('div');
+            body.id = 'stage-body';
+            shell.appendChild(body);
+
+            try {
+                AudioEngine.click();
+                GameControllers[gameId].init(body);
+            } catch (err) {
+                renderStageError(body, gameId, err && err.message ? err.message : 'Unexpected game error');
+            }
+        }
+
+        function restartCurrentGame() {
+            if (!currentGameId) return;
+            openGame(currentGameId);
+        }
+
+        function renderStageError(container, gameId, msg) {
+            container.innerHTML = `
+                <div class="error-box">
+                    <div class="font-cyber" style="font-weight:800;margin-bottom:0.4rem;">STAGE RECOVERY</div>
+                    <p style="font-size:0.82rem;margin-bottom:0.85rem;">${msg}</p>
+                    <button class="btn-primary" id="err-retry-btn" type="button">Reset Game</button>
+                    <button class="btn-secondary" id="err-lobby-btn" type="button">Back to Lobby</button>
+                </div>
+            `;
+            document.getElementById('err-retry-btn').addEventListener('click', () => openGame(gameId));
+            document.getElementById('err-lobby-btn').addEventListener('click', openLobby);
+        }
+
+        function makeModeBar(options, activeValue, onSelect) {
+            const bar = document.createElement('div');
+            bar.className = 'segmented-bar';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `seg-btn ${opt.value === activeValue ? 'active' : ''}`;
+                btn.textContent = opt.label;
+                btn.addEventListener('click', () => {
+                    AudioEngine.click();
+                    onSelect(opt.value);
+                });
+                bar.appendChild(btn);
+            });
+            return bar;
+        }
+
+        function makeLiveScoreBar(l1, v1, midLbl, midVal, l2, v2) {
+            const bar = document.createElement('div');
+            bar.className = 'live-bar';
+            bar.innerHTML = `
+                <div class="live-box p1"><div class="live-lbl">${l1}</div><div class="live-val" id="sb-v1">${v1}</div></div>
+                <div class="live-box"><div class="live-lbl">${midLbl}</div><div class="live-val" id="sb-vm">${midVal}</div></div>
+                <div class="live-box p2"><div class="live-lbl">${l2}</div><div class="live-val" id="sb-v2">${v2}</div></div>
+            `;
+            return bar;
+        }
+
+        function makeStatusBanner(text, color = 'var(--cyan)') {
+            const div = document.createElement('div');
+            div.className = 'status-banner';
+            div.id = 'stage-status';
+            div.style.color = color;
+            div.textContent = text;
+            return div;
+        }
+
+        function setStageStatus(text, color = 'var(--cyan)') {
+            const el = document.getElementById('stage-status');
+            if (el) { el.textContent = text; el.style.color = color; }
+        }
+
+        /* ======================================================================
+           4. ALL 16 GAME CONTROLLERS
+           ====================================================================== */
+        const GameControllers = {};
+
+        /* --- 1. TIC-TAC-TOE --- */
+        GameControllers.ttt = (() => {
+            let mode = 'hard', board, turn, over, winLine;
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+            function checkWin(b) {
+                for (const line of wins) {
+                    const [a, c, d] = line;
+                    if (b[a] && b[a] === b[c] && b[a] === b[d]) return { winner: b[a], line };
+                }
+                if (b.every(Boolean)) return { winner: 'D', line: [] };
+                return null;
+            }
+
+            function minimax(b, isMax) {
+                const res = checkWin(b);
+                if (res) {
+                    if (res.winner === 'O') return 10;
+                    if (res.winner === 'X') return -10;
+                    return 0;
+                }
+                if (isMax) {
+                    let best = -999;
+                    for (let i = 0; i < 9; i++) if (!b[i]) {
+                        b[i] = 'O'; best = Math.max(best, minimax(b, false)); b[i] = null;
+                    }
+                    return best;
+                } else {
+                    let best = 999;
+                    for (let i = 0; i < 9; i++) if (!b[i]) {
+                        b[i] = 'X'; best = Math.min(best, minimax(b, true)); b[i] = null;
+                    }
+                    return best;
+                }
+            }
+
+            function cpuMove() {
+                const empty = board.map((v, i) => v ? -1 : i).filter(i => i >= 0);
+                if (!empty.length || over) return;
+                let pick = empty[Math.floor(Math.random() * empty.length)];
+                if (mode === 'hard') {
+                    let bestScore = -999;
+                    for (const idx of empty) {
+                        board[idx] = 'O';
+                        const sc = minimax(board, false);
+                        board[idx] = null;
+                        if (sc > bestScore) { bestScore = sc; pick = idx; }
+                    }
+                }
+                board[pick] = 'O';
+                AudioEngine.move(false);
+                finishStep();
+            }
+
+            function finishStep() {
+                const res = checkWin(board);
+                if (res) {
+                    over = true;
+                    winLine = res.line;
+                    if (res.winner === 'X') {
+                        stats.ttt.p1++; persistStats(); AudioEngine.win();
+                        setStageStatus(mode === 'pvp' ? 'Player 1 (X) Wins!' : 'You (X) Win!', '#06d6a0');
+                    } else if (res.winner === 'O') {
+                        stats.ttt.p2++; persistStats();
+                        mode === 'pvp' ? AudioEngine.win() : AudioEngine.lose();
+                        setStageStatus(mode === 'pvp' ? 'Player 2 (O) Wins!' : 'CPU (O) Wins!', 'var(--magenta)');
+                    } else {
+                        stats.ttt.d++; persistStats();
+                        setStageStatus('Draw Game!', 'var(--amber)');
+                    }
+                    document.getElementById('sb-v1').textContent = stats.ttt.p1;
+                    document.getElementById('sb-vm').textContent = stats.ttt.d;
+                    document.getElementById('sb-v2').textContent = stats.ttt.p2;
+                    renderBoard();
+                    return;
+                }
+                turn = turn === 'X' ? 'O' : 'X';
+                setStageStatus(mode === 'pvp' ? `Player ${turn === 'X' ? '1 (X)' : '2 (O)'}'s Turn` : (turn === 'X' ? 'Your Turn (X)' : 'CPU (O) thinking...'));
+                renderBoard();
+                if (mode !== 'pvp' && turn === 'O') {
+                    registerTimeout(setTimeout(cpuMove, 260));
+                }
+            }
+
+            function renderBoard() {
+                const grid = document.getElementById('ttt-grid');
+                if (!grid) return;
+                grid.innerHTML = '';
+                board.forEach((val, idx) => {
+                    const cell = document.createElement('button');
+                    cell.type = 'button';
+                    const isWinCell = winLine.includes(idx);
+                    cell.className = `ttt-cell ${val ? val.toLowerCase() : ''} ${isWinCell ? 'win' : ''}`;
+                    cell.textContent = val || '';
+                    cell.addEventListener('click', () => {
+                        if (over || board[idx]) return;
+                        if (mode !== 'pvp' && turn === 'O') return;
+                        board[idx] = turn;
+                        AudioEngine.move(turn === 'X');
+                        finishStep();
+                    });
+                    grid.appendChild(cell);
+                });
+            }
+
+            function init(container) {
+                board = Array(9).fill(null);
+                turn = 'X';
+                over = false;
+                winLine = [];
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([
+                    { label: '1P Hard AI', value: 'hard' },
+                    { label: '1P Easy AI', value: 'easy' },
+                    { label: '2 Player', value: 'pvp' }
+                ], mode, v => { mode = v; init(container); }));
+
+                container.appendChild(makeLiveScoreBar(
+                    mode === 'pvp' ? 'P1 (X)' : 'You (X)', stats.ttt.p1,
+                    'Draws', stats.ttt.d,
+                    mode === 'pvp' ? 'P2 (O)' : 'CPU (O)', stats.ttt.p2
+                ));
+                container.appendChild(makeStatusBanner(mode === 'pvp' ? 'Player 1 (X) Turn' : 'Your Turn (X)'));
+                const g = document.createElement('div');
+                g.className = 'ttt-grid';
+                g.id = 'ttt-grid';
+                container.appendChild(g);
+                renderBoard();
+            }
+
+            return { init };
+        })();
+
+        /* --- 2. NEON DROP (CONNECT 4) --- */
+        GameControllers.c4 = (() => {
+            const ROWS = 6, COLS = 7;
+            let mode = 'cpu', grid, turn, over;
+
+            function dropInCol(col) {
+                for (let r = ROWS - 1; r >= 0; r--) {
+                    if (!grid[r][col]) { grid[r][col] = turn; return r; }
+                }
+                return -1;
+            }
+
+            function hasFour(b, p) {
+                const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        if (b[r][c] !== p) continue;
+                        for (const [dr, dc] of dirs) {
+                            let ok = true;
+                            for (let k = 1; k < 4; k++) {
+                                const nr = r + dr * k, nc = c + dc * k;
+                                if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS || b[nr][nc] !== p) { ok = false; break; }
+                            }
+                            if (ok) return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            function pickCpuCol() {
+                const valid = [];
+                for (let c = 0; c < COLS; c++) if (!grid[0][c]) valid.push(c);
+                for (const c of valid) {
+                    const r = dropInCol(c);
+                    const win = hasFour(grid, 2);
+                    grid[r][c] = 0;
+                    if (win) return c;
+                }
+                for (const c of valid) {
+                    const r = dropInCol(c);
+                    grid[r][c] = 1;
+                    const block = hasFour(grid, 1);
+                    grid[r][c] = 0;
+                    if (block) return c;
+                }
+                return valid.includes(3) ? 3 : valid[Math.floor(Math.random() * valid.length)];
+            }
+
+            function afterDrop(p) {
+                if (hasFour(grid, p)) {
+                    over = true;
+                    if (p === 1) { stats.c4.p1++; persistStats(); AudioEngine.win(); setStageStatus('Player 1 Wins!', '#06d6a0'); }
+                    else { stats.c4.p2++; persistStats(); mode === 'pvp' ? AudioEngine.win() : AudioEngine.lose(); setStageStatus(mode === 'pvp' ? 'Player 2 Wins!' : 'CPU Wins!', 'var(--magenta)'); }
+                    document.getElementById('sb-v1').textContent = stats.c4.p1;
+                    document.getElementById('sb-v2').textContent = stats.c4.p2;
+                    render();
+                    return;
+                }
+                if (grid[0].every(Boolean)) {
+                    over = true; stats.c4.d++; persistStats();
+                    document.getElementById('sb-vm').textContent = stats.c4.d;
+                    setStageStatus('Draw!', 'var(--amber)');
+                    render();
+                    return;
+                }
+                turn = turn === 1 ? 2 : 1;
+                setStageStatus(mode === 'pvp' ? `Player ${turn}'s Turn` : (turn === 1 ? 'Your Turn (Cyan)' : 'CPU dropping disc...'));
+                render();
+                if (mode === 'cpu' && turn === 2) {
+                    registerTimeout(setTimeout(() => {
+                        if (over) return;
+                        const c = pickCpuCol();
+                        dropInCol(c);
+                        AudioEngine.move(false);
+                        afterDrop(2);
+                    }, 300));
+                }
+            }
+
+            function render() {
+                const el = document.getElementById('c4-grid');
+                if (!el) return;
+                el.innerHTML = '';
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        const cell = document.createElement('button');
+                        cell.type = 'button';
+                        const v = grid[r][c];
+                        cell.className = `c4-cell ${v === 1 ? 'p1' : (v === 2 ? 'p2' : '')}`;
+                        cell.addEventListener('click', () => {
+                            if (over || (mode === 'cpu' && turn === 2)) return;
+                            if (dropInCol(c) === -1) return;
+                            AudioEngine.move(turn === 1);
+                            afterDrop(turn);
+                        });
+                        el.appendChild(cell);
+                    }
+                }
+            }
+
+            function init(container) {
+                grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+                turn = 1; over = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar(mode === 'pvp' ? 'P1' : 'You', stats.c4.p1, 'Draws', stats.c4.d, mode === 'pvp' ? 'P2' : 'CPU', stats.c4.p2));
+                container.appendChild(makeStatusBanner(mode === 'pvp' ? 'Player 1 Turn' : 'Your Turn — Tap a column'));
+                const g = document.createElement('div'); g.className = 'c4-grid'; g.id = 'c4-grid';
+                container.appendChild(g);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 3. CYBER GRID (DOTS & BOXES) --- */
+        GameControllers.dab = (() => {
+            const N = 3;
+            let mode = 'cpu', hEdges, vEdges, boxes, turn, over, s1, s2;
+
+            function checkBoxes(p) {
+                let claimed = 0;
+                for (let r = 0; r < N; r++) {
+                    for (let c = 0; c < N; c++) {
+                        if (!boxes[r][c] && hEdges[r][c] && hEdges[r+1][c] && vEdges[r][c] && vEdges[r][c+1]) {
+                            boxes[r][c] = p;
+                            claimed++;
+                        }
+                    }
+                }
+                return claimed;
+            }
+
+            function allEdges() {
+                const list = [];
+                for (let r = 0; r <= N; r++) for (let c = 0; c < N; c++) if (!hEdges[r][c]) list.push({ t: 'h', r, c });
+                for (let r = 0; r < N; r++) for (let c = 0; c <= N; c++) if (!vEdges[r][c]) list.push({ t: 'v', r, c });
+                return list;
+            }
+
+            function setEdge(e) {
+                if (e.t === 'h') hEdges[e.r][e.c] = turn;
+                else vEdges[e.r][e.c] = turn;
+            }
+
+            function applyMove(e) {
+                setEdge(e);
+                AudioEngine.move(turn === 1);
+                const got = checkBoxes(turn);
+                if (got > 0) {
+                    if (turn === 1) s1 += got; else s2 += got;
+                    AudioEngine.score();
+                }
+                const rem = N * N - (s1 + s2);
+                document.getElementById('sb-v1').textContent = s1;
+                document.getElementById('sb-vm').textContent = rem;
+                document.getElementById('sb-v2').textContent = s2;
+
+                if (rem === 0) {
+                    over = true;
+                    if (s1 > s2) { stats.dab.p1++; persistStats(); AudioEngine.win(); setStageStatus(`Player 1 Wins ${s1}-${s2}!`, '#06d6a0'); }
+                    else if (s2 > s1) { stats.dab.p2++; persistStats(); mode === 'pvp' ? AudioEngine.win() : AudioEngine.lose(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Wins ${s2}-${s1}!`, 'var(--magenta)'); }
+                    else setStageStatus('Tie Grid!', 'var(--amber)');
+                    render();
+                    return;
+                }
+
+                if (got === 0) turn = turn === 1 ? 2 : 1;
+                setStageStatus(mode === 'pvp' ? `Player ${turn}'s Turn` : (turn === 1 ? 'Your Turn' : 'CPU moving...'));
+                render();
+
+                if (mode === 'cpu' && turn === 2 && !over) {
+                    registerTimeout(setTimeout(() => {
+                        const opts = allEdges();
+                        if (!opts.length) return;
+                        // Prefer box-completing edge
+                        let chosen = opts[Math.floor(Math.random() * opts.length)];
+                        for (const cand of opts) {
+                            if (cand.t === 'h') hEdges[cand.r][cand.c] = 2; else vEdges[cand.r][cand.c] = 2;
+                            let makes = 0;
+                            for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+                                if (!boxes[r][c] && hEdges[r][c] && hEdges[r+1][c] && vEdges[r][c] && vEdges[r][c+1]) makes++;
+                            }
+                            if (cand.t === 'h') hEdges[cand.r][cand.c] = 0; else vEdges[cand.r][cand.c] = 0;
+                            if (makes > 0) { chosen = cand; break; }
+                        }
+                        applyMove(chosen);
+                    }, 280));
+                }
+            }
+
+            function render() {
+                const svg = document.getElementById('dab-svg');
+                if (!svg) return;
+                svg.innerHTML = '';
+                const pad = 36, step = 76;
+
+                for (let r = 0; r < N; r++) {
+                    for (let c = 0; c < N; c++) {
+                        if (boxes[r][c]) {
+                            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                            rect.setAttribute('x', pad + c * step + 6);
+                            rect.setAttribute('y', pad + r * step + 6);
+                            rect.setAttribute('width', step - 12);
+                            rect.setAttribute('height', step - 12);
+                            rect.setAttribute('rx', 8);
+                            rect.setAttribute('fill', boxes[r][c] === 1 ? 'rgba(0,243,255,0.22)' : 'rgba(255,0,127,0.22)');
+                            svg.appendChild(rect);
+                        }
+                    }
+                }
+
+                for (let r = 0; r <= N; r++) {
+                    for (let c = 0; c < N; c++) {
+                        const owner = hEdges[r][c];
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', pad + c * step); line.setAttribute('y1', pad + r * step);
+                        line.setAttribute('x2', pad + (c + 1) * step); line.setAttribute('y2', pad + r * step);
+                        line.setAttribute('stroke', owner === 1 ? '#00f3ff' : (owner === 2 ? '#ff007f' : 'rgba(148,163,184,0.22)'));
+                        line.setAttribute('stroke-width', owner ? 6 : 4);
+                        line.setAttribute('stroke-linecap', 'round');
+                        svg.appendChild(line);
+
+                        if (!owner) {
+                            const hit = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                            hit.setAttribute('x1', pad + c * step); hit.setAttribute('y1', pad + r * step);
+                            hit.setAttribute('x2', pad + (c + 1) * step); hit.setAttribute('y2', pad + r * step);
+                            hit.setAttribute('stroke', 'transparent'); hit.setAttribute('stroke-width', 22);
+                            hit.style.cursor = 'pointer';
+                            hit.addEventListener('click', () => {
+                                if (!over && !(mode === 'cpu' && turn === 2)) applyMove({ t: 'h', r, c });
+                            });
+                            svg.appendChild(hit);
+                        }
+                    }
+                }
+
+                for (let r = 0; r < N; r++) {
+                    for (let c = 0; c <= N; c++) {
+                        const owner = vEdges[r][c];
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', pad + c * step); line.setAttribute('y1', pad + r * step);
+                        line.setAttribute('x2', pad + c * step); line.setAttribute('y2', pad + (r + 1) * step);
+                        line.setAttribute('stroke', owner === 1 ? '#00f3ff' : (owner === 2 ? '#ff007f' : 'rgba(148,163,184,0.22)'));
+                        line.setAttribute('stroke-width', owner ? 6 : 4);
+                        line.setAttribute('stroke-linecap', 'round');
+                        svg.appendChild(line);
+
+                        if (!owner) {
+                            const hit = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                            hit.setAttribute('x1', pad + c * step); hit.setAttribute('y1', pad + r * step);
+                            hit.setAttribute('x2', pad + c * step); hit.setAttribute('y2', pad + (r + 1) * step);
+                            hit.setAttribute('stroke', 'transparent'); hit.setAttribute('stroke-width', 22);
+                            hit.style.cursor = 'pointer';
+                            hit.addEventListener('click', () => {
+                                if (!over && !(mode === 'cpu' && turn === 2)) applyMove({ t: 'v', r, c });
+                            });
+                            svg.appendChild(hit);
+                        }
+                    }
+                }
+
+                for (let r = 0; r <= N; r++) {
+                    for (let c = 0; c <= N; c++) {
+                        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        dot.setAttribute('cx', pad + c * step); dot.setAttribute('cy', pad + r * step);
+                        dot.setAttribute('r', 5.5); dot.setAttribute('fill', '#f8fafc');
+                        svg.appendChild(dot);
+                    }
+                }
+            }
+
+            function init(container) {
+                hEdges = Array.from({ length: N + 1 }, () => Array(N).fill(0));
+                vEdges = Array.from({ length: N }, () => Array(N + 1).fill(0));
+                boxes = Array.from({ length: N }, () => Array(N).fill(0));
+                turn = 1; over = false; s1 = 0; s2 = 0;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar(mode === 'pvp' ? 'P1' : 'You', 0, 'Left', 9, mode === 'pvp' ? 'P2' : 'CPU', 0));
+                container.appendChild(makeStatusBanner('Tap any line to claim grid edges'));
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.id = 'dab-svg'; svg.className.baseVal = 'dab-svg'; svg.setAttribute('viewBox', '0 0 300 300');
+                container.appendChild(svg);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 4. CYBER PONG --- */
+        GameControllers.pong = (() => {
+            let mode = 'cpu', canvas, ctx, w, h, p1Y, p2Y, ball, s1, s2, running;
+
+            function resetBall(dir = 1) {
+                ball = { x: w / 2, y: h / 2, vx: 5.2 * dir, vy: (Math.random() * 4 - 2), r: 8 };
+            }
+
+            function draw() {
+                if (!ctx) return;
+                ctx.fillStyle = '#04070f';
+                ctx.fillRect(0, 0, w, h);
+                ctx.strokeStyle = 'rgba(148,163,184,0.2)';
+                ctx.setLineDash([8, 8]);
+                ctx.beginPath(); ctx.moveTo(w / 2, 0); ctx.lineTo(w / 2, h); ctx.stroke();
+                ctx.setLineDash([]);
+
+                const padH = Math.max(64, h * 0.22);
+                ctx.fillStyle = '#00f3ff';
+                ctx.fillRect(14, p1Y - padH / 2, 11, padH);
+                ctx.fillStyle = '#ff007f';
+                ctx.fillRect(w - 25, p2Y - padH / 2, 11, padH);
+
+                ctx.fillStyle = '#ffbe0b';
+                ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+            }
+
+            function loop() {
+                if (!running || currentGameId !== 'pong') return;
+                const padH = Math.max(64, h * 0.22);
+                if (keys['w'] || keys['W']) p1Y -= 7;
+                if (keys['s'] || keys['S']) p1Y += 7;
+                p1Y = Math.max(padH / 2, Math.min(h - padH / 2, p1Y));
+
+                if (mode === 'pvp') {
+                    if (keys['ArrowUp']) p2Y -= 7;
+                    if (keys['ArrowDown']) p2Y += 7;
+                } else {
+                    const diff = ball.y - p2Y;
+                    p2Y += Math.sign(diff) * Math.min(Math.abs(diff), 5.2);
+                }
+                p2Y = Math.max(padH / 2, Math.min(h - padH / 2, p2Y));
+
+                ball.x += ball.vx; ball.y += ball.vy;
+                if (ball.y - ball.r < 0 || ball.y + ball.r > h) { ball.vy *= -1; AudioEngine.move(true); }
+
+                if (ball.vx < 0 && ball.x - ball.r <= 25 && Math.abs(ball.y - p1Y) <= padH / 2 + ball.r) {
+                    ball.vx = Math.abs(ball.vx) * 1.04;
+                    ball.vy = ((ball.y - p1Y) / (padH / 2)) * 6;
+                    AudioEngine.move(true);
+                }
+                if (ball.vx > 0 && ball.x + ball.r >= w - 25 && Math.abs(ball.y - p2Y) <= padH / 2 + ball.r) {
+                    ball.vx = -Math.abs(ball.vx) * 1.04;
+                    ball.vy = ((ball.y - p2Y) / (padH / 2)) * 6;
+                    AudioEngine.move(false);
+                }
+
+                if (ball.x < 0) { s2++; AudioEngine.score(); afterPoint(); return; }
+                if (ball.x > w) { s1++; AudioEngine.score(); afterPoint(); return; }
+
+                draw();
+                registerRaf(requestAnimationFrame(loop));
+            }
+
+            function afterPoint() {
+                document.getElementById('sb-v1').textContent = s1;
+                document.getElementById('sb-v2').textContent = s2;
+                if (s1 >= 7 || s2 >= 7) {
+                    running = false;
+                    const p1Win = s1 >= 7;
+                    if (p1Win) { stats.pong.p1++; persistStats(); AudioEngine.win(); }
+                    else { stats.pong.p2++; mode === 'pvp' ? AudioEngine.win() : AudioEngine.lose(); }
+                    setStageStatus(p1Win ? 'Player 1 Wins Match!' : (mode === 'pvp' ? 'Player 2 Wins!' : 'CPU Wins Match!'), p1Win ? '#06d6a0' : 'var(--magenta)');
+                    document.getElementById('pong-ov').classList.remove('hidden');
+                    document.getElementById('pong-ov-btn').textContent = 'Play Again';
+                    draw();
+                    return;
+                }
+                resetBall(ball.x < 0 ? 1 : -1);
+                registerRaf(requestAnimationFrame(loop));
+            }
+
+            function init(container) {
+                running = false; s1 = 0; s2 = 0;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar(mode === 'pvp' ? 'P1' : 'You', 0, 'First To', 7, mode === 'pvp' ? 'P2' : 'CPU', 0));
+                container.appendChild(makeStatusBanner('W/S or Touch Left • P2: Arrows or Touch Right'));
+
+                const wrap = document.createElement('div');
+                wrap.className = 'stage-canvas-wrap';
+                canvas = document.createElement('canvas');
+                wrap.appendChild(canvas);
+
+                const ov = document.createElement('div');
+                ov.className = 'canvas-overlay';
+                ov.id = 'pong-ov';
+                ov.innerHTML = `<div class="font-cyber" style="font-size:1.3rem;margin-bottom:0.6rem;color:#fff;">CYBER PONG</div><button class="btn-primary" id="pong-ov-btn" type="button">Launch Puck</button>`;
+                wrap.appendChild(ov);
+                container.appendChild(wrap);
+
+                ctx = canvas.getContext('2d');
+                const dim = fitCanvas(canvas, 640, 400);
+                w = dim.w; h = dim.h;
+                p1Y = h / 2; p2Y = h / 2;
+                resetBall(1);
+                draw();
+
+                const onPointer = e => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width;
+                    const y = ((e.clientY - rect.top) / rect.height) * h;
+                    if (x < 0.5) p1Y = y;
+                    else if (mode === 'pvp') p2Y = y;
+                };
+                canvas.addEventListener('pointermove', onPointer);
+                canvas.addEventListener('pointerdown', onPointer);
+
+                document.getElementById('pong-ov-btn').addEventListener('click', () => {
+                    const dim2 = fitCanvas(canvas, 640, 400);
+                    w = dim2.w; h = dim2.h;
+                    s1 = 0; s2 = 0;
+                    document.getElementById('sb-v1').textContent = '0';
+                    document.getElementById('sb-v2').textContent = '0';
+                    ov.classList.add('hidden');
+                    resetBall(1);
+                    running = true;
+                    registerRaf(requestAnimationFrame(loop));
+                });
+            }
+
+            return { init };
+        })();
+
+        /* --- 5. NEON SNAKE --- */
+        GameControllers.snake = (() => {
+            const GRID = 20;
+            let speed = 'normal', canvas, ctx, w, h, snake, dir, food, score, running;
+
+            function placeFood() {
+                while (true) {
+                    const fx = Math.floor(Math.random() * GRID);
+                    const fy = Math.floor(Math.random() * GRID);
+                    if (!snake.some(s => s.x === fx && s.y === fy)) { food = { x: fx, y: fy }; return; }
+                }
+            }
+
+            function draw() {
+                if (!ctx) return;
+                ctx.fillStyle = '#04070f';
+                ctx.fillRect(0, 0, w, h);
+                const cs = w / GRID;
+                ctx.fillStyle = '#ff007f';
+                ctx.beginPath(); ctx.arc((food.x + 0.5) * cs, (food.y + 0.5) * cs, cs * 0.38, 0, Math.PI * 2); ctx.fill();
+
+                snake.forEach((seg, i) => {
+                    ctx.fillStyle = i === 0 ? '#00f3ff' : '#06d6a0';
+                    ctx.fillRect(seg.x * cs + 1, seg.y * cs + 1, cs - 2, cs - 2);
+                });
+            }
+
+            function step() {
+                if (!running || currentGameId !== 'snake') return;
+                const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+                if (head.x < 0 || head.x >= GRID || head.y < 0 || head.y >= GRID || snake.some(s => s.x === head.x && s.y === head.y)) {
+                    running = false;
+                    clearAllLoops();
+                    AudioEngine.lose();
+                    if (score > stats.snake.best) { stats.snake.best = score; persistStats(); }
+                    document.getElementById('sb-vm').textContent = stats.snake.best;
+                    setStageStatus(`Game Over — Score ${score}`, 'var(--magenta)');
+                    document.getElementById('snk-ov').classList.remove('hidden');
+                    document.getElementById('snk-ov-btn').textContent = 'Play Again';
+                    return;
+                }
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    score += 10;
+                    AudioEngine.score();
+                    if (score > stats.snake.best) { stats.snake.best = score; persistStats(); }
+                    document.getElementById('sb-v1').textContent = score;
+                    document.getElementById('sb-vm').textContent = stats.snake.best;
+                    placeFood();
+                } else {
+                    snake.pop();
+                }
+                draw();
+            }
+
+            function setDir(dx, dy) {
+                if (dir.x + dx === 0 && dir.y + dy === 0) return;
+                dir = { x: dx, y: dy };
+            }
+
+            function init(container) {
+                running = false; score = 0;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([
+                    { label: 'Chill', value: 'slow' },
+                    { label: 'Normal', value: 'normal' },
+                    { label: 'Turbo', value: 'fast' }
+                ], speed, v => { speed = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('Score', 0, 'Best', stats.snake.best, 'Grid', '20×20'));
+                container.appendChild(makeStatusBanner('Arrows / WASD or D-Pad below'));
+
+                const wrap = document.createElement('div');
+                wrap.className = 'stage-canvas-wrap square';
+                canvas = document.createElement('canvas');
+                wrap.appendChild(canvas);
+
+                const ov = document.createElement('div');
+                ov.className = 'canvas-overlay';
+                ov.id = 'snk-ov';
+                ov.innerHTML = `<div class="font-cyber" style="font-size:1.25rem;margin-bottom:0.6rem;color:#fff;">NEON SNAKE</div><button class="btn-primary" id="snk-ov-btn" type="button">Start Run</button>`;
+                wrap.appendChild(ov);
+                container.appendChild(wrap);
+
+                const pad = document.createElement('div');
+                pad.className = 'pad-row';
+                pad.innerHTML = `<div></div><button class="pad-btn" id="snk-u" type="button">▲</button><div></div><button class="pad-btn" id="snk-l" type="button">◀</button><button class="pad-btn" id="snk-d" type="button">▼</button><button class="pad-btn" id="snk-r" type="button">▶</button>`;
+                container.appendChild(pad);
+
+                document.getElementById('snk-u').addEventListener('click', () => setDir(0, -1));
+                document.getElementById('snk-d').addEventListener('click', () => setDir(0, 1));
+                document.getElementById('snk-l').addEventListener('click', () => setDir(-1, 0));
+                document.getElementById('snk-r').addEventListener('click', () => setDir(1, 0));
+
+                ctx = canvas.getContext('2d');
+                const dim = fitCanvas(canvas, 360, 360);
+                w = dim.w; h = dim.h;
+                snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+                dir = { x: 1, y: 0 };
+                placeFood();
+                draw();
+
+                document.getElementById('snk-ov-btn').addEventListener('click', () => {
+                    clearAllLoops();
+                    const dim2 = fitCanvas(canvas, 360, 360);
+                    w = dim2.w; h = dim2.h;
+                    score = 0;
+                    snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+                    dir = { x: 1, y: 0 };
+                    placeFood();
+                    document.getElementById('sb-v1').textContent = '0';
+                    ov.classList.add('hidden');
+                    running = true;
+                    const ms = speed === 'slow' ? 165 : (speed === 'fast' ? 80 : 120);
+                    registerInterval(setInterval(step, ms));
+                });
+            }
+
+            return { init };
+        })();
+
+        /* --- 6. CYBER MEMORY MATCH --- */
+        GameControllers.memory = (() => {
+            const SYMBOLS = ['⚡', '◈', '❖', '◎', '✦', '⬡', '✺', '♛'];
+            let mode = 'solo', cards, flipped, matched, moves, turn, p1Pts, p2Pts, lock;
+
+            function render() {
+                const g = document.getElementById('mem-grid');
+                if (!g) return;
+                g.innerHTML = '';
+                cards.forEach((sym, i) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    const isRev = flipped.includes(i);
+                    const isMat = matched.includes(i);
+                    btn.className = `mem-card ${isMat ? 'matched' : (isRev ? 'revealed' : '')}`;
+                    btn.textContent = (isRev || isMat) ? sym : '?';
+                    btn.addEventListener('click', () => {
+                        if (lock || isRev || isMat || flipped.length >= 2) return;
+                        AudioEngine.click();
+                        flipped.push(i);
+                        render();
+                        if (flipped.length === 2) {
+                            moves++;
+                            lock = true;
+                            const [a, b] = flipped;
+                            if (cards[a] === cards[b]) {
+                                matched.push(a, b);
+                                AudioEngine.score();
+                                if (mode === 'pvp') { if (turn === 1) p1Pts++; else p2Pts++; }
+                                flipped = [];
+                                lock = false;
+                                updateCounters();
+                                if (matched.length === cards.length) {
+                                    AudioEngine.win();
+                                    if (mode === 'solo') {
+                                        if (!stats.memory.best || moves < stats.memory.best) { stats.memory.best = moves; persistStats(); }
+                                        setStageStatus(`Cleared in ${moves} Moves!`, '#06d6a0');
+                                    } else {
+                                        setStageStatus(p1Pts > p2Pts ? `Player 1 Wins (${p1Pts}-${p2Pts})!` : (p2Pts > p1Pts ? `Player 2 Wins (${p2Pts}-${p1Pts})!` : 'Tie Duel!'), '#06d6a0');
+                                    }
+                                }
+                                render();
+                            } else {
+                                registerTimeout(setTimeout(() => {
+                                    flipped = [];
+                                    if (mode === 'pvp') turn = turn === 1 ? 2 : 1;
+                                    lock = false;
+                                    updateCounters();
+                                    render();
+                                }, 550));
+                            }
+                        }
+                    });
+                    g.appendChild(btn);
+                });
+            }
+
+            function updateCounters() {
+                if (mode === 'solo') {
+                    document.getElementById('sb-v1').textContent = moves;
+                    document.getElementById('sb-vm').textContent = `${matched.length / 2}/8`;
+                    document.getElementById('sb-v2').textContent = stats.memory.best || '--';
+                } else {
+                    document.getElementById('sb-v1').textContent = p1Pts;
+                    document.getElementById('sb-vm').textContent = 8 - matched.length / 2;
+                    document.getElementById('sb-v2').textContent = p2Pts;
+                    setStageStatus(`Player ${turn}'s Turn`);
+                }
+            }
+
+            function init(container) {
+                cards = [...SYMBOLS, ...SYMBOLS].sort(() => Math.random() - 0.5);
+                flipped = []; matched = []; moves = 0; turn = 1; p1Pts = 0; p2Pts = 0; lock = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P Solo', value: 'solo' }, { label: '2P Duel', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(
+                    mode === 'solo'
+                        ? makeLiveScoreBar('Moves', 0, 'Pairs', '0/8', 'Best', stats.memory.best || '--')
+                        : makeLiveScoreBar('P1 Pairs', 0, 'Left', 8, 'P2 Pairs', 0)
+                );
+                container.appendChild(makeStatusBanner(mode === 'solo' ? 'Find all 8 matching pairs' : 'Player 1 Turn'));
+                const g = document.createElement('div'); g.className = 'mem-grid'; g.id = 'mem-grid';
+                container.appendChild(g);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 7. NEON NIM --- */
+        GameControllers.nim = (() => {
+            let mode = 'xor', piles, selRow, selCount, turn, over;
+
+            function bestXor() {
+                const xor = piles.reduce((a, b) => a ^ b, 0);
+                if (xor !== 0) {
+                    for (let r = 0; r < piles.length; r++) {
+                        const target = piles[r] ^ xor;
+                        if (target < piles[r]) return { r, take: piles[r] - target };
+                    }
+                }
+                const idx = piles.findIndex(v => v > 0);
+                return { r: idx, take: 1 };
+            }
+
+            function commit(r, take) {
+                piles[r] -= take;
+                selRow = -1; selCount = 0;
+                AudioEngine.move(turn === 1);
+                if (piles.every(v => v === 0)) {
+                    over = true;
+                    if (turn === 1) { stats.nim.p1++; persistStats(); AudioEngine.win(); setStageStatus('Player 1 Wins!', '#06d6a0'); }
+                    else { stats.nim.p2++; persistStats(); mode === 'pvp' ? AudioEngine.win() : AudioEngine.lose(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Wins!`, 'var(--magenta)'); }
+                    document.getElementById('sb-v1').textContent = stats.nim.p1;
+                    document.getElementById('sb-v2').textContent = stats.nim.p2;
+                    render();
+                    return;
+                }
+                turn = turn === 1 ? 2 : 1;
+                setStageStatus(mode === 'pvp' ? `Player ${turn}'s Turn` : (turn === 1 ? 'Your Turn — Pick sticks & Take' : 'CPU calculating...'));
+                render();
+                if (mode !== 'pvp' && turn === 2 && !over) {
+                    registerTimeout(setTimeout(() => {
+                        const m = mode === 'xor' ? bestXor() : { r: piles.findIndex(v => v > 0), take: 1 };
+                        if (m.r >= 0) commit(m.r, m.take);
+                    }, 320));
+                }
+            }
+
+            function render() {
+                const arena = document.getElementById('nim-arena');
+                if (!arena) return;
+                arena.innerHTML = '';
+                [1, 3, 5, 7].forEach((maxC, rIdx) => {
+                    const row = document.createElement('div');
+                    row.className = 'nim-row';
+                    for (let i = 0; i < maxC; i++) {
+                        const st = document.createElement('div');
+                        const gone = i >= piles[rIdx];
+                        const isSel = !gone && selRow === rIdx && i >= piles[rIdx] - selCount;
+                        st.className = `nim-stick ${gone ? 'gone' : ''} ${isSel ? 'sel' : ''}`;
+                        if (!gone) {
+                            st.addEventListener('click', () => {
+                                if (over || (mode !== 'pvp' && turn === 2)) return;
+                                AudioEngine.click();
+                                if (selRow !== rIdx) { selRow = rIdx; selCount = 1; }
+                                else selCount = selCount >= piles[rIdx] ? 1 : selCount + 1;
+                                render();
+                            });
+                        }
+                        row.appendChild(st);
+                    }
+                    arena.appendChild(row);
+                });
+            }
+
+            function init(container) {
+                piles = [1, 3, 5, 7]; selRow = -1; selCount = 0; turn = 1; over = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P XOR AI', value: 'xor' }, { label: '1P Casual', value: 'easy' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar(mode === 'pvp' ? 'P1' : 'You', stats.nim.p1, 'Rule', 'Last Wins', mode === 'pvp' ? 'P2' : 'CPU', stats.nim.p2));
+                container.appendChild(makeStatusBanner('Tap sticks in a row, then Take Selected'));
+
+                const arena = document.createElement('div'); arena.className = 'nim-arena'; arena.id = 'nim-arena';
+                container.appendChild(arena);
+
+                const btn = document.createElement('button');
+                btn.type = 'button'; btn.className = 'btn-primary'; btn.style.marginTop = '0.85rem'; btn.style.width = '100%';
+                btn.textContent = 'Take Selected Sticks';
+                btn.addEventListener('click', () => {
+                    if (!over && selRow >= 0 && selCount > 0 && !(mode !== 'pvp' && turn === 2)) commit(selRow, selCount);
+                });
+                container.appendChild(btn);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 8. CYBER REVERSI --- */
+        GameControllers.reversi = (() => {
+            let mode = 'cpu', b, turn, over;
+            const dirs = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+
+            function flipsAt(board, r, c, p) {
+                if (board[r][c] !== 0) return [];
+                const opp = p === 1 ? 2 : 1;
+                let res = [];
+                for (const [dr, dc] of dirs) {
+                    const line = [];
+                    let nr = r + dr, nc = c + dc;
+                    while (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && board[nr][nc] === opp) {
+                        line.push([nr, nc]); nr += dr; nc += dc;
+                    }
+                    if (line.length && nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && board[nr][nc] === p) res = res.concat(line);
+                }
+                return res;
+            }
+
+            function validMoves(board, p) {
+                const list = [];
+                for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                    const f = flipsAt(board, r, c, p);
+                    if (f.length) list.push({ r, c, f });
+                }
+                return list;
+            }
+
+            function playAt(r, c) {
+                const f = flipsAt(b, r, c, turn);
+                if (!f.length || over) return;
+                b[r][c] = turn;
+                f.forEach(([fr, fc]) => { b[fr][fc] = turn; });
+                AudioEngine.move(turn === 1);
+
+                const next = turn === 1 ? 2 : 1;
+                if (validMoves(b, next).length) turn = next;
+                else if (!validMoves(b, turn).length) {
+                    over = true;
+                    let c1 = 0, c2 = 0;
+                    b.flat().forEach(v => { if (v === 1) c1++; else if (v === 2) c2++; });
+                    if (c1 > c2) { stats.reversi.p1++; persistStats(); AudioEngine.win(); setStageStatus(`Player 1 Wins ${c1}-${c2}!`, '#06d6a0'); }
+                    else { stats.reversi.p2++; persistStats(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Wins ${c2}-${c1}!`, 'var(--magenta)'); }
+                    render();
+                    return;
+                }
+                render();
+                if (mode === 'cpu' && turn === 2 && !over) {
+                    registerTimeout(setTimeout(() => {
+                        const mv = validMoves(b, 2);
+                        if (!mv.length) return;
+                        mv.sort((a, z) => z.f.length - a.f.length);
+                        playAt(mv[0].r, mv[0].c);
+                    }, 280));
+                }
+            }
+
+            function render() {
+                const el = document.getElementById('rev-board');
+                if (!el) return;
+                el.innerHTML = '';
+                const vm = new Set(validMoves(b, turn).map(m => `${m.r},${m.c}`));
+                let c1 = 0, c2 = 0;
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        const v = b[r][c];
+                        if (v === 1) c1++; else if (v === 2) c2++;
+                        const sq = document.createElement('div');
+                        const can = !over && vm.has(`${r},${c}`) && !(mode === 'cpu' && turn === 2);
+                        sq.className = 'sq-8x8';
+                        sq.style.background = can ? 'rgba(6,214,160,0.22)' : 'rgba(12,24,36,0.92)';
+                        if (v) {
+                            const d = document.createElement('div');
+                            d.style.cssText = `width:76%;height:76%;border-radius:50%;background:${v === 1 ? '#00f3ff' : '#ff007f'};`;
+                            sq.appendChild(d);
+                        }
+                        if (can) sq.addEventListener('click', () => playAt(r, c));
+                        el.appendChild(sq);
+                    }
+                }
+                document.getElementById('sb-v1').textContent = c1;
+                document.getElementById('sb-v2').textContent = c2;
+                if (!over) setStageStatus(mode === 'pvp' ? `Player ${turn}'s Turn` : (turn === 1 ? 'Your Turn (Cyan)' : 'CPU thinking...'));
+            }
+
+            function init(container) {
+                b = Array.from({ length: 8 }, () => Array(8).fill(0));
+                b[3][3] = 2; b[3][4] = 1; b[4][3] = 1; b[4][4] = 2;
+                turn = 1; over = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('Cyan', 2, 'Board', '8×8', 'Pink', 2));
+                container.appendChild(makeStatusBanner('Your Turn (Cyan)'));
+                const g = document.createElement('div'); g.className = 'board-8x8'; g.id = 'rev-board';
+                container.appendChild(g);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 9. NEON MANCALA --- */
+        GameControllers.mancala = (() => {
+            let mode = 'cpu', pits, turn, over;
+
+            function sow(idx) {
+                let seeds = pits[idx];
+                if (!seeds || over) return;
+                pits[idx] = 0;
+                let cur = idx;
+                const skip = turn === 1 ? 13 : 6;
+                const store = turn === 1 ? 6 : 13;
+                while (seeds > 0) {
+                    cur = (cur + 1) % 14;
+                    if (cur === skip) continue;
+                    pits[cur]++; seeds--;
+                }
+                AudioEngine.move(turn === 1);
+                if (pits.slice(0, 6).every(x => !x) || pits.slice(7, 13).every(x => !x)) {
+                    for (let i = 0; i < 6; i++) { pits[6] += pits[i]; pits[i] = 0; }
+                    for (let i = 7; i < 13; i++) { pits[13] += pits[i]; pits[i] = 0; }
+                    over = true;
+                    if (pits[6] > pits[13]) { stats.mancala.p1++; persistStats(); AudioEngine.win(); setStageStatus(`Player 1 Wins ${pits[6]}-${pits[13]}!`, '#06d6a0'); }
+                    else { stats.mancala.p2++; persistStats(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Wins ${pits[13]}-${pits[6]}!`, 'var(--magenta)'); }
+                    render();
+                    return;
+                }
+                if (cur !== store) turn = turn === 1 ? 2 : 1;
+                render();
+                if (mode === 'cpu' && turn === 2 && !over) {
+                    registerTimeout(setTimeout(() => {
+                        const opts = [7,8,9,10,11,12].filter(i => pits[i] > 0);
+                        if (opts.length) sow(opts[Math.floor(Math.random() * opts.length)]);
+                    }, 300));
+                }
+            }
+
+            function render() {
+                const el = document.getElementById('man-ui');
+                if (!el) return;
+                el.innerHTML = '';
+                const wrap = document.createElement('div'); wrap.className = 'mancala-wrap';
+                const s2 = document.createElement('div'); s2.className = 'man-store'; s2.style.background = 'rgba(255,0,127,0.15)'; s2.style.color = 'var(--magenta)'; s2.textContent = pits[13];
+                const mid = document.createElement('div');
+                const top = document.createElement('div'); top.className = 'man-row';
+                const bot = document.createElement('div'); bot.className = 'man-row';
+
+                for (let i = 12; i >= 7; i--) {
+                    const p = document.createElement('button'); p.type = 'button'; p.className = 'man-pit'; p.textContent = pits[i];
+                    if (!over && turn === 2 && mode === 'pvp' && pits[i] > 0) p.addEventListener('click', () => sow(i));
+                    top.appendChild(p);
+                }
+                for (let i = 0; i <= 5; i++) {
+                    const p = document.createElement('button'); p.type = 'button'; p.className = 'man-pit'; p.textContent = pits[i];
+                    if (!over && turn === 1 && pits[i] > 0) p.addEventListener('click', () => sow(i));
+                    bot.appendChild(p);
+                }
+                mid.appendChild(top); mid.appendChild(bot);
+                const s1 = document.createElement('div'); s1.className = 'man-store'; s1.style.background = 'rgba(0,243,255,0.15)'; s1.style.color = 'var(--cyan)'; s1.textContent = pits[6];
+                wrap.appendChild(s2); wrap.appendChild(mid); wrap.appendChild(s1);
+                el.appendChild(wrap);
+
+                document.getElementById('sb-v1').textContent = pits[6];
+                document.getElementById('sb-v2').textContent = pits[13];
+                if (!over) setStageStatus(mode === 'pvp' ? `Player ${turn}'s Turn` : (turn === 1 ? 'Your Turn (Bottom Row)' : 'CPU sowing...'));
+            }
+
+            function init(container) {
+                pits = [4,4,4,4,4,4, 0, 4,4,4,4,4,4, 0];
+                turn = 1; over = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('P1 Store', 0, 'Seeds', 48, 'P2/CPU', 0));
+                container.appendChild(makeStatusBanner('Your Turn (Bottom Row)'));
+                const u = document.createElement('div'); u.id = 'man-ui';
+                container.appendChild(u);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 10. CYBER CHECKERS --- */
+        GameControllers.checkers = (() => {
+            let mode = 'cpu', b, turn, sel, over;
+
+            function movesFor(board, p) {
+                const jumps = [], steps = [];
+                for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                    const v = board[r][c];
+                    if ((p === 1 && v > 0) || (p === 2 && v < 0)) {
+                        const dirs = Math.abs(v) === 2 ? [[-1,-1],[-1,1],[1,-1],[1,1]] : (p === 1 ? [[-1,-1],[-1,1]] : [[1,-1],[1,1]]);
+                        for (const [dr, dc] of dirs) {
+                            const nr = r + dr, nc = c + dc;
+                            if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+                                if (!board[nr][nc]) steps.push({ fr: r, fc: c, tr: nr, tc: nc, cap: null });
+                                else if ((p === 1 && board[nr][nc] < 0) || (p === 2 && board[nr][nc] > 0)) {
+                                    const jr = nr + dr, jc = nc + dc;
+                                    if (jr >= 0 && jr < 8 && jc >= 0 && jc < 8 && !board[jr][jc]) jumps.push({ fr: r, fc: c, tr: jr, tc: jc, cap: [nr, nc] });
+                                }
+                            }
+                        }
+                    }
+                }
+                return jumps.length ? jumps : steps;
+            }
+
+            function applyMove(m) {
+                const piece = b[m.fr][m.fc];
+                b[m.fr][m.fc] = 0;
+                b[m.tr][m.tc] = piece;
+                if (m.cap) { b[m.cap[0]][m.cap[1]] = 0; AudioEngine.score(); }
+                else AudioEngine.move(turn === 1);
+                if (piece === 1 && m.tr === 0) b[m.tr][m.tc] = 2;
+                if (piece === -1 && m.tr === 7) b[m.tr][m.tc] = -2;
+                sel = null;
+                turn = turn === 1 ? 2 : 1;
+
+                if (!movesFor(b, turn).length) {
+                    over = true;
+                    const win = turn === 1 ? 2 : 1;
+                    if (win === 1) { stats.checkers.p1++; persistStats(); AudioEngine.win(); setStageStatus('Player 1 Wins!', '#06d6a0'); }
+                    else { stats.checkers.p2++; persistStats(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Wins!`, 'var(--magenta)'); }
+                    render();
+                    return;
+                }
+                render();
+                if (mode === 'cpu' && turn === 2 && !over) {
+                    registerTimeout(setTimeout(() => {
+                        const list = movesFor(b, 2);
+                        if (list.length) applyMove(list[Math.floor(Math.random() * list.length)]);
+                    }, 300));
+                }
+            }
+
+            function render() {
+                const el = document.getElementById('chk-board');
+                if (!el) return;
+                el.innerHTML = '';
+                const legal = movesFor(b, turn);
+                const targets = new Set(sel ? legal.filter(m => m.fr === sel.r && m.fc === sel.c).map(m => `${m.tr},${m.tc}`) : []);
+                let c1 = 0, c2 = 0;
+                for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                    const v = b[r][c];
+                    if (v > 0) c1++; else if (v < 0) c2++;
+                    const dark = (r + c) % 2 === 1;
+                    const isT = targets.has(`${r},${c}`);
+                    const sq = document.createElement('div');
+                    sq.className = 'sq-8x8';
+                    sq.style.background = isT ? 'rgba(6,214,160,0.28)' : (dark ? 'rgba(8,12,24,0.95)' : 'rgba(30,41,59,0.45)');
+                    if (v) {
+                        const pc = document.createElement('div');
+                        pc.style.cssText = `width:76%;height:76%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;background:${v > 0 ? '#00f3ff' : '#ff007f'};color:#040812;`;
+                        if (Math.abs(v) === 2) pc.textContent = 'K';
+                        sq.appendChild(pc);
+                    }
+                    if (dark && !over) {
+                        sq.addEventListener('click', () => {
+                            if (mode === 'cpu' && turn === 2) return;
+                            if ((turn === 1 && v > 0) || (turn === 2 && v < 0)) { sel = { r, c }; render(); return; }
+                            if (sel) {
+                                const mv = legal.find(m => m.fr === sel.r && m.fc === sel.c && m.tr === r && m.tc === c);
+                                if (mv) applyMove(mv);
+                            }
+                        });
+                    }
+                    el.appendChild(sq);
+                }
+                document.getElementById('sb-v1').textContent = c1;
+                document.getElementById('sb-v2').textContent = c2;
+                if (!over) setStageStatus(mode === 'pvp' ? `Player ${turn}'s Turn` : (turn === 1 ? 'Your Turn (Cyan)' : 'CPU moving...'));
+            }
+
+            function init(container) {
+                b = Array.from({ length: 8 }, () => Array(8).fill(0));
+                for (let r = 0; r < 3; r++) for (let c = 0; c < 8; c++) if ((r + c) % 2 === 1) b[r][c] = -1;
+                for (let r = 5; r < 8; r++) for (let c = 0; c < 8; c++) if ((r + c) % 2 === 1) b[r][c] = 1;
+                turn = 1; sel = null; over = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('Cyan', 12, '8×8', 'Draughts', 'Pink', 12));
+                container.appendChild(makeStatusBanner('Your Turn (Cyan)'));
+                const g = document.createElement('div'); g.className = 'board-8x8'; g.id = 'chk-board';
+                container.appendChild(g);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 11. NEON BATTLESHIP --- */
+        GameControllers.battleship = (() => {
+            let mode = 'cpu', ships, shots, turn, over;
+
+            function makeFleet() {
+                const occ = new Set(), fleet = [];
+                [4, 3, 2].forEach(len => {
+                    while (true) {
+                        const h = Math.random() > 0.5;
+                        const r = Math.floor(Math.random() * (h ? 8 : 8 - len + 1));
+                        const c = Math.floor(Math.random() * (h ? 8 - len + 1 : 8));
+                        const cells = Array.from({ length: len }, (_, i) => `${r + (h ? 0 : i)},${c + (h ? i : 0)}`);
+                        if (cells.every(k => !occ.has(k))) { cells.forEach(k => occ.add(k)); fleet.push(...cells); break; }
+                    }
+                });
+                return new Set(fleet);
+            }
+
+            function fire(shooter, r, c) {
+                const target = shooter === 1 ? 2 : 1;
+                const key = `${r},${c}`;
+                if (shots[shooter].has(key) || over) return;
+                const hit = ships[target].has(key);
+                shots[shooter].set(key, hit ? 'hit' : 'miss');
+                hit ? AudioEngine.score() : AudioEngine.click();
+
+                const hits = [...shots[shooter].values()].filter(v => v === 'hit').length;
+                if (hits >= 9) {
+                    over = true;
+                    if (shooter === 1) { stats.battleship.p1++; persistStats(); AudioEngine.win(); setStageStatus('Enemy Fleet Destroyed!', '#06d6a0'); }
+                    else { stats.battleship.p2++; persistStats(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Sank Your Fleet!`, 'var(--magenta)'); }
+                    render();
+                    return;
+                }
+
+                if (mode === 'cpu' && shooter === 1) {
+                    turn = 2; render();
+                    registerTimeout(setTimeout(() => {
+                        const open = [];
+                        for (let rr = 0; rr < 8; rr++) for (let cc = 0; cc < 8; cc++) if (!shots[2].has(`${rr},${cc}`)) open.push([rr, cc]);
+                        if (open.length) {
+                            const [ar, ac] = open[Math.floor(Math.random() * open.length)];
+                            fire(2, ar, ac);
+                        }
+                        turn = 1; render();
+                    }, 300));
+                } else if (mode === 'pvp') {
+                    turn = target;
+                    render();
+                }
+            }
+
+            function render() {
+                const wrap = document.getElementById('bs-grids');
+                if (!wrap) return;
+                wrap.innerHTML = '';
+                const target = turn === 1 ? 2 : 1;
+
+                [ { title: 'Enemy Radar (Tap)', isEnemy: true }, { title: 'Your Fleet', isEnemy: false } ].forEach(panel => {
+                    const col = document.createElement('div');
+                    col.innerHTML = `<div style="font-size:0.72rem;font-weight:800;margin-bottom:0.35rem;text-align:center;color:${panel.isEnemy ? 'var(--magenta)' : 'var(--cyan)'}">${panel.title}</div>`;
+                    const g = document.createElement('div'); g.className = 'bs-grid';
+                    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                        const key = `${r},${c}`;
+                        const cell = document.createElement('div'); cell.className = 'bs-cell';
+                        if (panel.isEnemy) {
+                            const st = shots[turn].get(key);
+                            if (st === 'hit') { cell.style.background = 'rgba(255,0,127,0.45)'; cell.textContent = '✕'; }
+                            else if (st === 'miss') { cell.style.background = 'rgba(148,163,184,0.2)'; cell.textContent = '•'; }
+                            else if (!over && !(mode === 'cpu' && turn === 2)) {
+                                cell.addEventListener('click', () => fire(turn, r, c));
+                            }
+                        } else {
+                            const st = shots[target].get(key);
+                            if (ships[turn].has(key)) cell.style.background = 'rgba(0,243,255,0.35)';
+                            if (st === 'hit') { cell.style.background = 'rgba(255,0,127,0.5)'; cell.textContent = '✕'; }
+                            else if (st === 'miss') cell.textContent = '•';
+                        }
+                        g.appendChild(cell);
+                    }
+                    col.appendChild(g);
+                    wrap.appendChild(col);
+                });
+
+                const h1 = [...shots[1].values()].filter(v => v === 'hit').length;
+                const h2 = [...shots[2].values()].filter(v => v === 'hit').length;
+                document.getElementById('sb-v1').textContent = `${h1}/9`;
+                document.getElementById('sb-v2').textContent = `${h2}/9`;
+                if (!over) setStageStatus(mode === 'pvp' ? `Player ${turn} Firing` : 'Tap Enemy Radar to Fire');
+            }
+
+            function init(container) {
+                ships = { 1: makeFleet(), 2: makeFleet() };
+                shots = { 1: new Map(), 2: new Map() };
+                turn = 1; over = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('P1 Hits', '0/9', 'Targets', '9', 'P2/CPU', '0/9'));
+                container.appendChild(makeStatusBanner('Tap Enemy Radar to Fire'));
+                const wDiv = document.createElement('div'); wDiv.className = 'bs-wrap'; wDiv.id = 'bs-grids';
+                container.appendChild(wDiv);
+                render();
+            }
+
+            return { init };
+        })();
+
+        /* --- 12. CYBER TANKS --- */
+        GameControllers.tanks = (() => {
+            let mode = 'cpu', canvas, ctx, w, h, ground, t1, t2, turn, wind, shell, over;
+
+            function draw() {
+                if (!ctx) return;
+                ctx.fillStyle = '#04070f'; ctx.fillRect(0, 0, w, h);
+                ctx.beginPath(); ctx.moveTo(0, h);
+                for (let x = 0; x < w; x++) ctx.lineTo(x, ground[x] || h * 0.72);
+                ctx.lineTo(w, h); ctx.closePath();
+                ctx.fillStyle = '#0f172a'; ctx.fill();
+                ctx.strokeStyle = '#00f3ff'; ctx.lineWidth = 2; ctx.stroke();
+
+                [t1, t2].forEach(t => {
+                    const gy = ground[Math.min(w - 1, Math.max(0, Math.round(t.x)))] || h * 0.72;
+                    ctx.fillStyle = t.col;
+                    ctx.fillRect(t.x - 14, gy - 10, 28, 10);
+                    const rad = (t.ang * Math.PI) / 180;
+                    ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.moveTo(t.x, gy - 9); ctx.lineTo(t.x + Math.cos(rad) * 18, gy - 9 - Math.sin(rad) * 18); ctx.stroke();
+                });
+
+                if (shell) {
+                    ctx.fillStyle = '#ffbe0b';
+                    ctx.beginPath(); ctx.arc(shell.x, shell.y, 5, 0, Math.PI * 2); ctx.fill();
+                }
+            }
+
+            function launch(shooter) {
+                if (shell || over) return;
+                const t = shooter === 1 ? t1 : t2;
+                const gy = ground[Math.round(t.x)] || h * 0.72;
+                const rad = (t.ang * Math.PI) / 180;
+                const spd = t.pwr * 0.14;
+                shell = { x: t.x + Math.cos(rad) * 18, y: gy - 12 - Math.sin(rad) * 18, vx: Math.cos(rad) * spd, vy: -Math.sin(rad) * spd, shooter };
+                AudioEngine.move(shooter === 1);
+
+                function anim() {
+                    if (!shell || currentGameId !== 'tanks') return;
+                    shell.vx += wind * 0.003;
+                    shell.vy += 0.2;
+                    shell.x += shell.vx; shell.y += shell.vy;
+                    draw();
+
+                    const ix = Math.round(shell.x);
+                    const hit1 = Math.hypot(shell.x - t1.x, shell.y - (ground[Math.round(t1.x)] - 6)) < 20;
+                    const hit2 = Math.hypot(shell.x - t2.x, shell.y - (ground[Math.round(t2.x)] - 6)) < 20;
+                    if (ix < 0 || ix >= w || shell.y > h || shell.y >= (ground[ix] || h) || hit1 || hit2) {
+                        if (hit1) { t1.hp = Math.max(0, t1.hp - 35); AudioEngine.lose(); }
+                        if (hit2) { t2.hp = Math.max(0, t2.hp - 35); AudioEngine.score(); }
+                        shell = null;
+                        document.getElementById('sb-v1').textContent = t1.hp;
+                        document.getElementById('sb-v2').textContent = t2.hp;
+                        draw();
+
+                        if (t1.hp <= 0 || t2.hp <= 0) {
+                            over = true;
+                            const p1w = t2.hp <= 0;
+                            if (p1w) { stats.tanks.p1++; persistStats(); AudioEngine.win(); setStageStatus('Player 1 Tank Wins!', '#06d6a0'); }
+                            else { stats.tanks.p2++; persistStats(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Tank Wins!`, 'var(--magenta)'); }
+                            return;
+                        }
+                        turn = turn === 1 ? 2 : 1;
+                        wind = Math.round(Math.random() * 12 - 6);
+                        document.getElementById('sb-vm').textContent = wind > 0 ? `${wind}→` : `${wind}←`;
+                        setStageStatus(mode === 'pvp' ? `Player ${turn} Aim & Fire` : (turn === 1 ? 'Your Turn — Aim & Fire' : 'CPU aiming...'));
+                        if (mode === 'cpu' && turn === 2) {
+                            registerTimeout(setTimeout(() => {
+                                t2.ang = 120 + Math.floor(Math.random() * 25);
+                                t2.pwr = 55 + Math.floor(Math.random() * 25);
+                                launch(2);
+                            }, 350));
+                        }
+                        return;
+                    }
+                    registerRaf(requestAnimationFrame(anim));
+                }
+                registerRaf(requestAnimationFrame(anim));
+            }
+
+            function init(container) {
+                over = false; shell = null; turn = 1; wind = Math.round(Math.random() * 10 - 5);
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('P1 HP', 100, 'Wind', wind, 'P2/CPU', 100));
+                container.appendChild(makeStatusBanner('Adjust Angle & Power, then Fire'));
+
+                const wrap = document.createElement('div'); wrap.className = 'stage-canvas-wrap';
+                canvas = document.createElement('canvas'); wrap.appendChild(canvas);
+                container.appendChild(wrap);
+
+                ctx = canvas.getContext('2d');
+                const dim = fitCanvas(canvas, 640, 380);
+                w = dim.w; h = dim.h;
+                ground = Array.from({ length: w }, (_, x) => Math.round(h * 0.72 + Math.sin(x * 0.02) * 28));
+                t1 = { x: Math.round(w * 0.16), hp: 100, ang: 45, pwr: 65, col: '#00f3ff' };
+                t2 = { x: Math.round(w * 0.84), hp: 100, ang: 135, pwr: 65, col: '#ff007f' };
+                draw();
+
+                const bar = document.createElement('div'); bar.className = 'tank-bar';
+                bar.innerHTML = `
+                    <div><label><span>Angle</span><span id="tk-a">45°</span></label><input type="range" id="tk-ang" min="10" max="170" value="45"></div>
+                    <div><label><span>Power</span><span id="tk-p">65%</span></label><input type="range" id="tk-pwr" min="25" max="100" value="65"></div>
+                    <button class="btn-primary" id="tk-fire" type="button">FIRE</button>
+                `;
+                container.appendChild(bar);
+
+                document.getElementById('tk-ang').addEventListener('input', e => {
+                    const t = turn === 1 ? t1 : t2; t.ang = Number(e.target.value);
+                    document.getElementById('tk-a').textContent = `${t.ang}°`; draw();
+                });
+                document.getElementById('tk-pwr').addEventListener('input', e => {
+                    const t = turn === 1 ? t1 : t2; t.pwr = Number(e.target.value);
+                    document.getElementById('tk-p').textContent = `${t.pwr}%`;
+                });
+                document.getElementById('tk-fire').addEventListener('click', () => {
+                    if (!(mode === 'cpu' && turn === 2)) launch(turn);
+                });
+            }
+
+            return { init };
+        })();
+
+        /* --- 13. NEON SUMO --- */
+        GameControllers.sumo = (() => {
+            let mode = 'cpu', canvas, ctx, w, h, p1, p2, s1, s2, running;
+
+            function resetPositions() {
+                p1 = { x: w * 0.36, y: h * 0.5, vx: 0, vy: 0, r: 20, col: '#00f3ff' };
+                p2 = { x: w * 0.64, y: h * 0.5, vx: 0, vy: 0, r: 20, col: '#ff007f' };
+            }
+
+            function draw() {
+                if (!ctx) return;
+                const rad = Math.min(w, h) * 0.38;
+                ctx.fillStyle = '#04070f'; ctx.fillRect(0, 0, w, h);
+                ctx.strokeStyle = '#ffbe0b'; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.arc(w / 2, h / 2, rad, 0, Math.PI * 2); ctx.stroke();
+
+                [p1, p2].forEach(p => {
+                    ctx.fillStyle = p.col;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+                });
+            }
+
+            function loop() {
+                if (!running || currentGameId !== 'sumo') return;
+                const rad = Math.min(w, h) * 0.38;
+                if (keys['w'] || keys['W']) p1.vy -= 0.45;
+                if (keys['s'] || keys['S']) p1.vy += 0.45;
+                if (keys['a'] || keys['A']) p1.vx -= 0.45;
+                if (keys['d'] || keys['D']) p1.vx += 0.45;
+
+                if (mode === 'pvp') {
+                    if (keys['ArrowUp']) p2.vy -= 0.45;
+                    if (keys['ArrowDown']) p2.vy += 0.45;
+                    if (keys['ArrowLeft']) p2.vx -= 0.45;
+                    if (keys['ArrowRight']) p2.vx += 0.45;
+                } else {
+                    const dx = p1.x - p2.x, dy = p1.y - p2.y, d = Math.hypot(dx, dy) || 1;
+                    p2.vx += (dx / d) * 0.38; p2.vy += (dy / d) * 0.38;
+                }
+
+                [p1, p2].forEach(p => { p.vx *= 0.92; p.vy *= 0.92; p.x += p.vx; p.y += p.vy; });
+
+                const dx = p2.x - p1.x, dy = p2.y - p1.y, dist = Math.hypot(dx, dy);
+                if (dist < p1.r + p2.r && dist > 0) {
+                    const nx = dx / dist, ny = dy / dist;
+                    p1.vx -= nx * 4.5; p1.vy -= ny * 4.5;
+                    p2.vx += nx * 4.5; p2.vy += ny * 4.5;
+                    AudioEngine.move(true);
+                }
+
+                const d1 = Math.hypot(p1.x - w / 2, p1.y - h / 2);
+                const d2 = Math.hypot(p2.x - w / 2, p2.y - h / 2);
+                if (d1 > rad || d2 > rad) {
+                    if (d1 > rad) s2++; else s1++;
+                    AudioEngine.score();
+                    document.getElementById('sb-v1').textContent = s1;
+                    document.getElementById('sb-v2').textContent = s2;
+                    if (s1 >= 3 || s2 >= 3) {
+                        running = false;
+                        const p1w = s1 >= 3;
+                        if (p1w) { stats.sumo.p1++; persistStats(); AudioEngine.win(); setStageStatus('Player 1 Wins Ring!', '#06d6a0'); }
+                        else { stats.sumo.p2++; persistStats(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Wins Ring!`, 'var(--magenta)'); }
+                        document.getElementById('sumo-ov').classList.remove('hidden');
+                        draw();
+                        return;
+                    }
+                    resetPositions();
+                }
+
+                draw();
+                registerRaf(requestAnimationFrame(loop));
+            }
+
+            function init(container) {
+                running = false; s1 = 0; s2 = 0;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('P1 Out', 0, 'First To', 3, 'P2/CPU', 0));
+                container.appendChild(makeStatusBanner('Push opponent outside gold ring'));
+
+                const wrap = document.createElement('div'); wrap.className = 'stage-canvas-wrap';
+                canvas = document.createElement('canvas'); wrap.appendChild(canvas);
+                const ov = document.createElement('div'); ov.className = 'canvas-overlay'; ov.id = 'sumo-ov';
+                ov.innerHTML = `<div class="font-cyber" style="font-size:1.25rem;margin-bottom:0.6rem;color:#fff;">NEON SUMO</div><button class="btn-primary" id="sumo-start" type="button">Enter Ring</button>`;
+                wrap.appendChild(ov);
+                container.appendChild(wrap);
+
+                ctx = canvas.getContext('2d');
+                const dim = fitCanvas(canvas, 640, 400);
+                w = dim.w; h = dim.h;
+                resetPositions();
+                draw();
+
+                const dp = document.createElement('div'); dp.className = 'dual-pad';
+                dp.innerHTML = `
+                    <div class="pad-row" style="margin-top:0"><div></div><button class="pad-btn" id="s1u" type="button">W</button><div></div><button class="pad-btn" id="s1l" type="button">A</button><button class="pad-btn" id="s1d" type="button">S</button><button class="pad-btn" id="s1r" type="button">D</button></div>
+                    <div class="pad-row" style="margin-top:0"><div></div><button class="pad-btn" id="s2u" type="button">▲</button><div></div><button class="pad-btn" id="s2l" type="button">◀</button><button class="pad-btn" id="s2d" type="button">▼</button><button class="pad-btn" id="s2r" type="button">▶</button></div>
+                `;
+                container.appendChild(dp);
+                const hold = (key, down) => { keys[key] = down; };
+                [['s1u','w'],['s1d','s'],['s1l','a'],['s1r','d'],['s2u','ArrowUp'],['s2d','ArrowDown'],['s2l','ArrowLeft'],['s2r','ArrowRight']].forEach(([id, k]) => {
+                    const el = document.getElementById(id);
+                    el.addEventListener('pointerdown', () => hold(k, true));
+                    el.addEventListener('pointerup', () => hold(k, false));
+                    el.addEventListener('pointerleave', () => hold(k, false));
+                });
+
+                document.getElementById('sumo-start').addEventListener('click', () => {
+                    const dim2 = fitCanvas(canvas, 640, 400); w = dim2.w; h = dim2.h;
+                    s1 = 0; s2 = 0;
+                    document.getElementById('sb-v1').textContent = '0'; document.getElementById('sb-v2').textContent = '0';
+                    ov.classList.add('hidden');
+                    resetPositions();
+                    running = true;
+                    registerRaf(requestAnimationFrame(loop));
+                });
+            }
+
+            return { init };
+        })();
+
+        /* --- 14. CYBER TRON --- */
+        GameControllers.tron = (() => {
+            const COLS = 48, ROWS = 30;
+            let mode = 'cpu', canvas, ctx, w, h, grid, c1, c2, running;
+
+            function draw() {
+                if (!ctx) return;
+                ctx.fillStyle = '#04070f'; ctx.fillRect(0, 0, w, h);
+                const cw = w / COLS, ch = h / ROWS;
+                for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+                    if (grid[r][c]) {
+                        ctx.fillStyle = grid[r][c] === 1 ? '#00f3ff' : '#ff007f';
+                        ctx.fillRect(c * cw + 1, r * ch + 1, cw - 2, ch - 2);
+                    }
+                }
+            }
+
+            function step() {
+                if (!running || currentGameId !== 'tron') return;
+                if (keys['w'] || keys['W']) { if (c1.dy !== 1) { c1.dx = 0; c1.dy = -1; } }
+                if (keys['s'] || keys['S']) { if (c1.dy !== -1) { c1.dx = 0; c1.dy = 1; } }
+                if (keys['a'] || keys['A']) { if (c1.dx !== 1) { c1.dx = -1; c1.dy = 0; } }
+                if (keys['d'] || keys['D']) { if (c1.dx !== -1) { c1.dx = 1; c1.dy = 0; } }
+
+                if (mode === 'pvp') {
+                    if (keys['ArrowUp']) { if (c2.dy !== 1) { c2.dx = 0; c2.dy = -1; } }
+                    if (keys['ArrowDown']) { if (c2.dy !== -1) { c2.dx = 0; c2.dy = 1; } }
+                    if (keys['ArrowLeft']) { if (c2.dx !== 1) { c2.dx = -1; c2.dy = 0; } }
+                    if (keys['ArrowRight']) { if (c2.dx !== -1) { c2.dx = 1; c2.dy = 0; } }
+                } else {
+                    const opts = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }]
+                        .filter(d => !(d.dx + c2.dx === 0 && d.dy + c2.dy === 0))
+                        .filter(d => {
+                            const nx = c2.x + d.dx, ny = c2.y + d.dy;
+                            return nx >= 0 && nx < COLS && ny >= 0 && ny < ROWS && !grid[ny][nx];
+                        });
+                    if (opts.length) {
+                        const pick = opts.find(d => d.dx === c2.dx && d.dy === c2.dy) || opts[0];
+                        c2.dx = pick.dx; c2.dy = pick.dy;
+                    }
+                }
+
+                c1.x += c1.dx; c1.y += c1.dy;
+                c2.x += c2.dx; c2.y += c2.dy;
+                const d1 = c1.x < 0 || c1.x >= COLS || c1.y < 0 || c1.y >= ROWS || grid[c1.y][c1.x] !== 0;
+                const d2 = c2.x < 0 || c2.x >= COLS || c2.y < 0 || c2.y >= ROWS || grid[c2.y][c2.x] !== 0;
+
+                if (d1 || d2) {
+                    running = false;
+                    clearAllLoops();
+                    if (d2 && !d1) { stats.tron.p1++; persistStats(); AudioEngine.win(); setStageStatus('Player 1 Wins!', '#06d6a0'); }
+                    else { stats.tron.p2++; persistStats(); AudioEngine.lose(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Wins!`, 'var(--magenta)'); }
+                    document.getElementById('sb-v1').textContent = stats.tron.p1;
+                    document.getElementById('sb-v2').textContent = stats.tron.p2;
+                    document.getElementById('tron-ov').classList.remove('hidden');
+                    return;
+                }
+                grid[c1.y][c1.x] = 1;
+                grid[c2.y][c2.x] = 2;
+                draw();
+            }
+
+            function init(container) {
+                running = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('P1 Wins', stats.tron.p1, 'Arena', 'Tron', 'P2/CPU', stats.tron.p2));
+                container.appendChild(makeStatusBanner('WASD for P1 • Arrows for P2'));
+
+                const wrap = document.createElement('div'); wrap.className = 'stage-canvas-wrap';
+                canvas = document.createElement('canvas'); wrap.appendChild(canvas);
+                const ov = document.createElement('div'); ov.className = 'canvas-overlay'; ov.id = 'tron-ov';
+                ov.innerHTML = `<div class="font-cyber" style="font-size:1.25rem;margin-bottom:0.6rem;color:#fff;">CYBER TRON</div><button class="btn-primary" id="tron-start" type="button">Ignite</button>`;
+                wrap.appendChild(ov);
+                container.appendChild(wrap);
+
+                ctx = canvas.getContext('2d');
+                const dim = fitCanvas(canvas, 640, 400); w = dim.w; h = dim.h;
+                grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+                draw();
+
+                document.getElementById('tron-start').addEventListener('click', () => {
+                    clearAllLoops();
+                    const dim2 = fitCanvas(canvas, 640, 400); w = dim2.w; h = dim2.h;
+                    grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+                    c1 = { x: 10, y: 15, dx: 1, dy: 0 };
+                    c2 = { x: 37, y: 15, dx: -1, dy: 0 };
+                    grid[15][10] = 1; grid[15][37] = 2;
+                    ov.classList.add('hidden');
+                    running = true;
+                    registerInterval(setInterval(step, 75));
+                });
+            }
+
+            return { init };
+        })();
+
+        /* --- 15. NEON TUG-OF-WAR --- */
+        GameControllers.tug = (() => {
+            let mode = 'cpu', pos, over;
+
+            function sync() {
+                const orb = document.getElementById('tug-orb');
+                if (orb) orb.style.left = `${pos}%`;
+                if (pos <= 4 || pos >= 96) {
+                    over = true;
+                    clearAllLoops();
+                    if (pos <= 4) { stats.tug.p1++; persistStats(); AudioEngine.win(); setStageStatus('Player 1 Pulls Victory!', '#06d6a0'); }
+                    else { stats.tug.p2++; persistStats(); AudioEngine.lose(); setStageStatus(`${mode === 'pvp' ? 'Player 2' : 'CPU'} Pulls Victory!`, 'var(--magenta)'); }
+                    document.getElementById('sb-v1').textContent = stats.tug.p1;
+                    document.getElementById('sb-v2').textContent = stats.tug.p2;
+                }
+            }
+
+            function pull(p) {
+                if (over) return;
+                if (p === 1) { pos = Math.max(0, pos - 4); AudioEngine.move(true); }
+                else { pos = Math.min(100, pos + 4); AudioEngine.move(false); }
+                sync();
+            }
+
+            function init(container) {
+                pos = 50; over = false;
+                container.innerHTML = '';
+                container.appendChild(makeModeBar([{ label: '1P vs CPU', value: 'cpu' }, { label: '2 Player', value: 'pvp' }], mode, v => { mode = v; init(container); }));
+                container.appendChild(makeLiveScoreBar('P1 Wins', stats.tug.p1, 'Beam', 'Tug', 'P2/CPU', stats.tug.p2));
+                container.appendChild(makeStatusBanner('Tap Pads or Press [A] vs [L]!'));
+
+                const box = document.createElement('div'); box.className = 'tug-box';
+                box.innerHTML = `<div class="tug-track"><div class="tug-mid"></div><div class="tug-orb" id="tug-orb" style="left:50%"></div></div>`;
+                container.appendChild(box);
+
+                const btns = document.createElement('div'); btns.className = 'tug-btns';
+                btns.innerHTML = `
+                    <button class="tug-btn p1" id="tug-p1" type="button">PULL P1 [A]</button>
+                    <button class="tug-btn p2" id="tug-p2" type="button">${mode === 'pvp' ? 'PULL P2 [L]' : 'CPU SURGE'}</button>
+                `;
+                container.appendChild(btns);
+
+                document.getElementById('tug-p1').addEventListener('pointerdown', () => pull(1));
+                if (mode === 'pvp') {
+                    document.getElementById('tug-p2').addEventListener('pointerdown', () => pull(2));
+                } else {
+                    registerInterval(setInterval(() => { if (!over) pull(2); }, 230));
+                }
+            }
+
+            return { init, pull };
+        })();
+
+        /* --- 16. CYBER BREAKOUT --- */
+        GameControllers.breakout = (() => {
+            let canvas, ctx, w, h, pad, ball, bricks, score, lives, running;
+
+            function makeBricks() {
+                bricks = [];
+                const cols = 8, rows = 4, gap = 6;
+                const bw = (w - gap * (cols + 1)) / cols;
+                const colors = ['#ff007f', '#ffbe0b', '#00f3ff', '#06d6a0'];
+                for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+                    bricks.push({ x: gap + c * (bw + gap), y: 34 + r * 22, w: bw, h: 15, alive: true, col: colors[r] });
+                }
+            }
+
+            function draw() {
+                if (!ctx) return;
+                ctx.fillStyle = '#04070f'; ctx.fillRect(0, 0, w, h);
+                bricks.forEach(b => { if (b.alive) { ctx.fillStyle = b.col; ctx.fillRect(b.x, b.y, b.w, b.h); } });
+                ctx.fillStyle = '#00f3ff'; ctx.fillRect(pad.x, h - 22, pad.w, 11);
+                ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+            }
+
+            function loop() {
+                if (!running || currentGameId !== 'breakout') return;
+                if (keys['ArrowLeft'] || keys['a'] || keys['A']) pad.x -= 7;
+                if (keys['ArrowRight'] || keys['d'] || keys['D']) pad.x += 7;
+                pad.x = Math.max(0, Math.min(w - pad.w, pad.x));
+
+                ball.x += ball.vx; ball.y += ball.vy;
+                if (ball.x - ball.r < 0 || ball.x + ball.r > w) { ball.vx *= -1; AudioEngine.move(true); }
+                if (ball.y - ball.r < 0) { ball.vy *= -1; AudioEngine.move(true); }
+
+                if (ball.vy > 0 && ball.y + ball.r >= h - 22 && ball.x >= pad.x && ball.x <= pad.x + pad.w) {
+                    ball.vy = -Math.abs(ball.vy);
+                    AudioEngine.move(true);
+                }
+
+                for (const b of bricks) {
+                    if (b.alive && ball.x + ball.r > b.x && ball.x - ball.r < b.x + b.w && ball.y + ball.r > b.y && ball.y - ball.r < b.y + b.h) {
+                        b.alive = false; ball.vy *= -1; score += 20; AudioEngine.score();
+                        if (score > stats.breakout.best) { stats.breakout.best = score; persistStats(); }
+                        document.getElementById('sb-v1').textContent = score;
+                        document.getElementById('sb-v2').textContent = stats.breakout.best;
+                        break;
+                    }
+                }
+
+                if (bricks.every(b => !b.alive)) makeBricks();
+
+                if (ball.y - ball.r > h) {
+                    lives--;
+                    document.getElementById('sb-vm').textContent = lives;
+                    AudioEngine.lose();
+                    if (lives <= 0) {
+                        running = false;
+                        setStageStatus(`Game Over — Score ${score}`, 'var(--magenta)');
+                        document.getElementById('brk-ov').classList.remove('hidden');
+                        draw();
+                        return;
+                    }
+                    ball = { x: w / 2, y: h - 38, vx: 4.4, vy: -4.8, r: 7 };
+                }
+
+                draw();
+                registerRaf(requestAnimationFrame(loop));
+            }
+
+            function init(container) {
+                running = false; score = 0; lives = 3;
+                container.innerHTML = '';
+                container.appendChild(makeLiveScoreBar('Score', 0, 'Lives', 3, 'Best', stats.breakout.best));
+                container.appendChild(makeStatusBanner('Mouse / Touch or Left/Right Arrows'));
+
+                const wrap = document.createElement('div'); wrap.className = 'stage-canvas-wrap';
+                canvas = document.createElement('canvas'); wrap.appendChild(canvas);
+                const ov = document.createElement('div'); ov.className = 'canvas-overlay'; ov.id = 'brk-ov';
+                ov.innerHTML = `<div class="font-cyber" style="font-size:1.25rem;margin-bottom:0.6rem;color:#fff;">CYBER BREAKOUT</div><button class="btn-primary" id="brk-start" type="button">Launch Ball</button>`;
+                wrap.appendChild(ov);
+                container.appendChild(wrap);
+
+                ctx = canvas.getContext('2d');
+                const dim = fitCanvas(canvas, 640, 400); w = dim.w; h = dim.h;
+                pad = { x: w / 2 - 55, w: 110 };
+                ball = { x: w / 2, y: h - 38, vx: 4.4, vy: -4.8, r: 7 };
+                makeBricks();
+                draw();
+
+                const ptrMove = e => {
+                    const rect = canvas.getBoundingClientRect();
+                    pad.x = Math.max(0, Math.min(w - pad.w, ((e.clientX - rect.left) / rect.width) * w - pad.w / 2));
+                };
+                canvas.addEventListener('pointermove', ptrMove);
+                canvas.addEventListener('pointerdown', ptrMove);
+
+                document.getElementById('brk-start').addEventListener('click', () => {
+                    const dim2 = fitCanvas(canvas, 640, 400); w = dim2.w; h = dim2.h;
+                    score = 0; lives = 3;
+                    pad = { x: w / 2 - 55, w: 110 };
+                    ball = { x: w / 2, y: h - 38, vx: 4.4, vy: -4.8, r: 7 };
+                    makeBricks();
+                    document.getElementById('sb-v1').textContent = '0';
+                    document.getElementById('sb-vm').textContent = '3';
+                    ov.classList.add('hidden');
+                    running = true;
+                    registerRaf(requestAnimationFrame(loop));
+                });
+            }
+
+            return { init };
+        })();
+
+        /* ======================================================================
+           5. GLOBAL EVENT DELEGATION & BOOTSTRAP
+           ====================================================================== */
+        document.getElementById('brand-lobby-btn').addEventListener('click', openLobby);
+        document.getElementById('top-lobby-btn').addEventListener('click', openLobby);
+        document.getElementById('top-restart-btn').addEventListener('click', restartCurrentGame);
+
+        document.getElementById('mute-btn').addEventListener('click', () => {
+            const muted = AudioEngine.toggleMute();
+            document.getElementById('mute-label').textContent = muted ? 'MUTE' : 'SFX';
+            if (!muted) AudioEngine.click();
+        });
+
+        document.getElementById('filter-tabs').addEventListener('click', e => {
+            const tab = e.target.closest('.filter-tab');
+            if (!tab) return;
+            AudioEngine.click();
+            currentFilter = tab.dataset.cat;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t === tab));
+            buildLobbyCards();
+        });
+
+        document.getElementById('hub-grid').addEventListener('click', e => {
+            const card = e.target.closest('.game-card');
+            if (!card || !card.dataset.gameId) return;
+            openGame(card.dataset.gameId);
+        });
+
+        window.addEventListener('keydown', e => {
+            keys[e.key] = true;
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key) && currentGameId) {
+                e.preventDefault();
+            }
+            if (currentGameId === 'tug' && !e.repeat) {
+                if (e.key === 'a' || e.key === 'A') GameControllers.tug.pull(1);
+                if (e.key === 'l' || e.key === 'L') GameControllers.tug.pull(2);
+            }
+        });
+
+        window.addEventListener('keyup', e => {
+            keys[e.key] = false;
+        });
+
+        window.addEventListener('resize', () => {
+            if (!currentGameId) return;
+            const canvas = document.querySelector('#stage-body canvas');
+            if (canvas) fitCanvas(canvas, 640, 400);
+        });
+
+        try {
+            buildLobbyCards();
+        } catch (err) {
+            document.getElementById('hub-grid').innerHTML = `<div class="error-box">Lobby load issue: ${err.message}</div>`;
+        }
+    </script>
+</body>
+</html>
